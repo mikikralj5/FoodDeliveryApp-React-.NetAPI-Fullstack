@@ -134,6 +134,17 @@ const Register = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirmPassword"
+                    autoComplete="new-password"
+                  />
+                </Grid>
+                <Grid item xs={12}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Role</InputLabel>
                     <Select
