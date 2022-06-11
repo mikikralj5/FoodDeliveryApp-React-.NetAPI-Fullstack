@@ -1,13 +1,14 @@
 ﻿using System;
-namespace FoodDeliveryAPI.Models
+namespace FoodDeliveryAPI.DTOs
 {
-    public class UserLogin
+    public class LoginDto
     {
+
         public string Username { get; set; }
 
         public string Password { get; set; }
 
-        public UserLogin()
+        public LoginDto()
         {
         }
     }
