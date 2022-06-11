@@ -71,7 +71,7 @@ namespace FoodDeliveryAPI.Controllers
 
             var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Role, user.UserType),
+                        new Claim(ClaimTypes.Role, user.Role),
                         new Claim(ClaimTypes.Name, user.Username)
                     };
 

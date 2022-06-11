@@ -24,7 +24,7 @@ namespace FoodDeliveryAPI.Models
         public string Lastname { get; set; }
         public string Address { get; set; }
         public string Date { get; set; }
-        public string UserType { get; set; }
+        public string Role { get; set; }
         public byte[] Picture { get; set; }
         public List<Order> Orders { get; set; }
         public string Verified { get; set; }
