@@ -5,7 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using FoodDeliveryAPI.Helpers;
 using FoodDeliveryAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,10 +19,12 @@ namespace FoodDeliveryAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly DeliveryContext _context;
+        private readonly JwtService _jwtService;
 
-        public AuthController(DeliveryContext context)
+        public AuthController(DeliveryContext context, JwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
 
@@ -46,6 +50,7 @@ namespace FoodDeliveryAPI.Controllers
 
         [HttpPost]
         [Route("Login")]
+       
         public IActionResult Login([FromBody] UserLogin userLogin)
         {
             User userTemp = _context.Users.Where(b => b.Username == userLogin.Username && b.Password == userLogin.Password).FirstOrDefault();
@@ -54,9 +59,31 @@ namespace FoodDeliveryAPI.Controllers
                 return NotFound("User not found");
             }
 
-            var token = GenerateToken(userTemp);
-            return Ok(token);
+            var token = _jwtService.GenerateToken(userTemp.Username);
+
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true
+            });
+
+            return Ok(userTemp.Role);
         }
+
+        [HttpGet("GetUser")]
+        
+        public IActionResult GetUser()
+        {
+            var jwt = Request.Cookies["jwt"];
+
+            var token = _jwtService.Verify(jwt);
+
+            string username = token.Issuer;
+
+
+
+            return Ok(username);
+        }
+
 
 
         private bool UserExists(string id)
@@ -64,26 +91,8 @@ namespace FoodDeliveryAPI.Controllers
             return _context.Users.Any(e => e.Username == id);
         }
 
-        private string GenerateToken(User user)
-        {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKeysdfsdfsdf"));
-            var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+       
 
-            var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Role, user.Role),
-                        new Claim(ClaimTypes.Name, user.Username)
-                    };
-
-            var token = new JwtSecurityToken(
-                issuer: "https://localhost:5001",
-                audience: "https://localhost:5001",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: signingCredentials
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+       
     }
 }
