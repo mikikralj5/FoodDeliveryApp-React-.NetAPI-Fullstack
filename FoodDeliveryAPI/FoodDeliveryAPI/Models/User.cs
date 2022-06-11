@@ -24,11 +24,10 @@ namespace FoodDeliveryAPI.Models
         public string Lastname { get; set; }
         public string Address { get; set; }
         public string Date { get; set; }
-        //[JsonConverter(typeof(StringEnumConverter))]
         public string UserType { get; set; }
         public byte[] Picture { get; set; }
         public List<Order> Orders { get; set; }
-        public UserState Verified { get; set; }
+        public string Verified { get; set; }
 
         public User()
         {
