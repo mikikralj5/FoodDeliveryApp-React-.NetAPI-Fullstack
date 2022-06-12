@@ -24,12 +24,14 @@ namespace FoodDeliveryAPI.Controllers
         private readonly IUserRepository _userRepository;
         private readonly JwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly ICartRepository _cartRepository;
 
-        public AuthController(IUserRepository userRepository, JwtService jwtService, IMapper mapper)
+        public AuthController(IUserRepository userRepository, JwtService jwtService, IMapper mapper, ICartRepository cartRepository)
         {
             _userRepository = userRepository;
             _jwtService = jwtService;
             _mapper = mapper;
+            _cartRepository = cartRepository;
         }
 
 
@@ -45,10 +47,11 @@ namespace FoodDeliveryAPI.Controllers
                 return BadRequest(new { mess = "vec postoji" });
             }
 
-
+            Cart cart = new Cart();
             User newUser = _mapper.Map<User>(dtoUser);
 
             newUser.Verified = "PENDING";
+            newUser.UserCart = cart;
              _userRepository.AddUser(newUser);
 
             return Ok(new { mess = "napravljen" });

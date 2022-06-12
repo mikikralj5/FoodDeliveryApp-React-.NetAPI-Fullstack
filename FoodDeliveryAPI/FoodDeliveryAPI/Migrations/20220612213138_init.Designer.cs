@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDeliveryAPI.Migrations
 {
     [DbContext(typeof(DeliveryContext))]
-    [Migration("20220611135919_userState")]
-    partial class userState
+    [Migration("20220612213138_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace FoodDeliveryAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Ingredient", b =>
+            modelBuilder.Entity("FoodDeliveryAPI.Models.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,7 +32,26 @@ namespace FoodDeliveryAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("IngredientName")
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("FoodDeliveryAPI.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CartId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ProductId")
@@ -40,9 +59,11 @@ namespace FoodDeliveryAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId");
+
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.Order", b =>
@@ -62,8 +83,8 @@ namespace FoodDeliveryAPI.Migrations
                     b.Property<string>("OrderAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Pending")
-                        .HasColumnType("bit");
+                    b.Property<string>("Pending")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
@@ -112,39 +133,18 @@ namespace FoodDeliveryAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Ingredients")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int?>("RestaurantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Restaurant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.User", b =>
@@ -173,22 +173,33 @@ namespace FoodDeliveryAPI.Migrations
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("UserType")
+                    b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Verified")
+                    b.Property<int?>("UserCartId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Verified")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Username");
+
+                    b.HasIndex("UserCartId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Ingredient", b =>
+            modelBuilder.Entity("FoodDeliveryAPI.Models.CartItem", b =>
                 {
-                    b.HasOne("FoodDeliveryAPI.Models.Product", null)
-                        .WithMany("Ingredients")
+                    b.HasOne("FoodDeliveryAPI.Models.Cart", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId");
+
+                    b.HasOne("FoodDeliveryAPI.Models.Product", "Product")
+                        .WithMany()
                         .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.Order", b =>
@@ -211,26 +222,23 @@ namespace FoodDeliveryAPI.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Product", b =>
+            modelBuilder.Entity("FoodDeliveryAPI.Models.User", b =>
                 {
-                    b.HasOne("FoodDeliveryAPI.Models.Restaurant", null)
-                        .WithMany("RestaurantProducts")
-                        .HasForeignKey("RestaurantId");
+                    b.HasOne("FoodDeliveryAPI.Models.Cart", "UserCart")
+                        .WithMany()
+                        .HasForeignKey("UserCartId");
+
+                    b.Navigation("UserCart");
+                });
+
+            modelBuilder.Entity("FoodDeliveryAPI.Models.Cart", b =>
+                {
+                    b.Navigation("CartItems");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.Order", b =>
                 {
                     b.Navigation("products");
-                });
-
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Product", b =>
-                {
-                    b.Navigation("Ingredients");
-                });
-
-            modelBuilder.Entity("FoodDeliveryAPI.Models.Restaurant", b =>
-                {
-                    b.Navigation("RestaurantProducts");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.User", b =>
