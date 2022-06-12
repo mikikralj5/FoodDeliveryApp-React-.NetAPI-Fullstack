@@ -21,5 +21,11 @@ namespace FoodDeliveryAPI.Controllers
             _context = context;
             _productRepository = productRepository;
         }
+
+        [HttpGet("GetProducts")]
+        public IActionResult GetProducts()
+        {
+            return Ok(_productRepository.GetProducts());
+        }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 namespace FoodDeliveryAPI.DTOs.User
 {
-	public class UserIdDto
+	public class VerifyUserDto
 	{
 		public string Username { get; set; }
+		public string State { get; set; }
 
-		public UserIdDto()
+		public VerifyUserDto()
 		{
 		}
 	}

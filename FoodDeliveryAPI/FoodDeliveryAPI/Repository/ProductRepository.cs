@@ -22,7 +22,23 @@ namespace FoodDeliveryAPI.Repository
             _context.SaveChanges();
         }
 
-        
+        public void DeleteProduct(string id)
+        {
+            var prod = _context.Products.Where(i => i.Id.ToString() == id).FirstOrDefault();
+            _context.Products.Remove(prod);
+            _context.SaveChanges();
+        }
+
+        public void EditProduct(Product product)
+        {
+            _context.Update(product);
+            _context.SaveChanges();
+        }
+
+        public List<Product> GetProducts()
+        {
+            return _context.Products.ToList();
+        }
     }
 }
 

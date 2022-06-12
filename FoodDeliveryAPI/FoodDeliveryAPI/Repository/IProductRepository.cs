@@ -8,7 +8,12 @@ namespace FoodDeliveryAPI.Repository
 	{
 		void AddProduct(Product product);
 
-        
-    }
+		void DeleteProduct(string id);
+
+		void EditProduct(Product product);
+
+		public List<Product> GetProducts();
+
+	}
 }
 

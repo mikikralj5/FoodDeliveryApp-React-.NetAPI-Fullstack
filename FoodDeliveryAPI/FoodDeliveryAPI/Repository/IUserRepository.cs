@@ -19,7 +19,7 @@ namespace FoodDeliveryAPI.Repository
 
         void UpdateUser(User user);
 
-        void VerifyUser(string username);
+        void VerifyUser(string username, string state);
 
         bool UserExists(string username);
     }

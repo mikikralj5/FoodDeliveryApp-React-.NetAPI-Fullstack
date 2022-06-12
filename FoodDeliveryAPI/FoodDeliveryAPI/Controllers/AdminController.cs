@@ -33,9 +33,9 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpPost("VerifyUser")]
-        public IActionResult VerifyUser([FromBody] UserIdDto userIdDto)
+        public IActionResult VerifyUser([FromBody] VerifyUserDto verifyUserDto)
         {
-            _userRepository.VerifyUser(userIdDto.Username);
+            _userRepository.VerifyUser(verifyUserDto.Username, verifyUserDto.State);
 
             return Ok("verifikovan");
         }
@@ -46,8 +46,8 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(_mapper.Map<List<UserProfileDto>>(_userRepository.GetUnverifiedDeliverers()));
         }
 
-        [HttpGet("GetVerifiedDeliverers")]
-        public IActionResult GetVerifiedDeliverers()
+        [HttpGet("GetVerifiedOrDeclinedDeliverers")]
+        public IActionResult GetVerifiedOrDeclinedDeliverers()
         {
             return Ok(_mapper.Map<List<UserProfileDto>>(_userRepository.GetVerifiedDeliverers()));
         }
@@ -64,7 +64,28 @@ namespace FoodDeliveryAPI.Controllers
             return Ok("proizvod dodat");
         }
 
-      
+        [HttpPost("DeleteProduct/{id}")]
+        public IActionResult DeleteProduct(string id)
+        {
+           
+
+            _productRepository.DeleteProduct(id);
+
+            return Ok("Deleted product");
+        }
+
+
+        [HttpPost("UpdateProduct")]
+        public IActionResult UpdateProduct([FromBody] Product product)
+        {
+            //Product product = _mapper.Map<Product>(productDto);
+
+            _productRepository.EditProduct(product);
+
+            return Ok("Edited product");
+        }
+
+
 
 
     }

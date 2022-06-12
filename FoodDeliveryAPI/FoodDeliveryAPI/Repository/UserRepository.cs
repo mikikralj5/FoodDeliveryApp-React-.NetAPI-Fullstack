@@ -34,7 +34,7 @@ namespace FoodDeliveryAPI.Repository
 
         public List<User> GetVerifiedDeliverers()
         {
-            return _context.Users.Where(i => i.Role == (UserType.DELIVERER).ToString() && i.Verified == (UserState.CONFIRMED).ToString()).ToList();
+            return _context.Users.Where(i => i.Role == (UserType.DELIVERER).ToString() && (i.Verified == (UserState.CONFIRMED).ToString() || i.Verified == UserState.DECLINED.ToString())).ToList();
         }
 
         public void UpdateUser(User user)
@@ -48,10 +48,10 @@ namespace FoodDeliveryAPI.Repository
             return _context.Users.Any(e => e.Username == username);
         }
 
-        public void VerifyUser(string username)
-        {
+        public void VerifyUser(string username, string state)
+        {           
             User user = GetByUsername(username);
-            user.Verified = "CONFIRMED";
+            user.Verified = state;
 
             UpdateUser(user);
         }
