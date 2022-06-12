@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FoodDeliveryAPI.Helpers;
+using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +50,7 @@ namespace FoodDeliveryAPI
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
-
+            services.AddAutoMapper(typeof(Startup));
             services.AddCors();
             services.AddControllers().AddJsonOptions(opt =>
             {
@@ -57,6 +58,8 @@ namespace FoodDeliveryAPI
             });
 
             services.AddScoped<JwtService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

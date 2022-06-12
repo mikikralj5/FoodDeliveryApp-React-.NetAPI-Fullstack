@@ -5,9 +5,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using FoodDeliveryAPI.DTOs;
 using FoodDeliveryAPI.Helpers;
 using FoodDeliveryAPI.Models;
+using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +21,15 @@ namespace FoodDeliveryAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly DeliveryContext _context;
+        private readonly IUserRepository _userRepository;
         private readonly JwtService _jwtService;
+        private readonly IMapper _mapper;
 
-        public AuthController(DeliveryContext context, JwtService jwtService)
+        public AuthController(IUserRepository userRepository, JwtService jwtService, IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepository;
             _jwtService = jwtService;
+            _mapper = mapper;
         }
 
 
@@ -33,25 +37,19 @@ namespace FoodDeliveryAPI.Controllers
         [Route("Register")]
         [Consumes("application/json")]
         //[Produces("application/json")]
-        public async Task<ActionResult> RegisterUser([FromBody] RegisterDto dtoUser)
+        public IActionResult RegisterUser([FromBody] RegisterDto dtoUser)
         {
-            if (UserExists(dtoUser.Username))
+            if (_userRepository.UserExists(dtoUser.Username))
             {
 
                 return BadRequest(new { mess = "vec postoji" });
             }
 
 
-            User newUser = new User
-            {
-                Username = dtoUser.Username,
-                Password = dtoUser.Password,
-                Role = dtoUser.Role
-            };
+            User newUser = _mapper.Map<User>(dtoUser);
 
             newUser.Verified = "PENDING";
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
+             _userRepository.AddUser(newUser);
 
             return Ok(new { mess = "napravljen" });
 
@@ -62,10 +60,17 @@ namespace FoodDeliveryAPI.Controllers
        
         public IActionResult Login([FromBody] LoginDto userLogin)
         {
-            User userTemp = _context.Users.Where(b => b.Username == userLogin.Username && b.Password == userLogin.Password).FirstOrDefault();
+            
+
+            User userTemp = _userRepository.GetByUsername(userLogin.Username);
             if(userTemp == null)
             {
                 return NotFound("User not found");
+            }
+
+            if(userTemp.Password != userLogin.Password)
+            {
+                return NotFound("Wrong password");
             }
 
             var token = _jwtService.GenerateToken(userTemp);
@@ -78,30 +83,23 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(token);
         }
 
-        [HttpGet("GetUser")]
+        [HttpGet("GetUserProfile")]
         [Authorize(Roles = "Consumer")]
-        public IActionResult GetUser()
+        public IActionResult GetUserProfile()
         {
-            //var jwt = Request.Cookies["jwt"];
-
-            //var token = _jwtService.Verify(jwt);
-
+            
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userClaims = identity.Claims;
             string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
 
+            User user = _userRepository.GetByUsername(username);
 
-
-
-            return Ok(username);
+            return Ok(_mapper.Map<UserProfileDto>(user));
         }
 
 
     
-        private bool UserExists(string id)
-        {
-            return _context.Users.Any(e => e.Username == id);
-        }
+       
 
        
 
