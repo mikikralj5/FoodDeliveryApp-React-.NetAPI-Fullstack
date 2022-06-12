@@ -97,12 +97,22 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(_mapper.Map<UserProfileDto>(user));
         }
 
+        [HttpPut("UpdateUserProfile")]
+        public IActionResult UpdateUserProfile([FromBody] UserProfileDto userProfileDto)
+        {
 
+            User user = _mapper.Map<User>(userProfileDto);
+            _userRepository.UpdateUser(user);
     
-       
+            return Ok("updated");
+        }
 
-       
 
-       
+
+
+
+
+
+
     }
 }

@@ -13,6 +13,13 @@ namespace FoodDeliveryAPI.Models
         PENDING
     }
 
+    public enum UserType
+    {
+        ADMIN,
+        CONSUMER,
+        DELIVERER
+    };
+
     public class User
     {
 

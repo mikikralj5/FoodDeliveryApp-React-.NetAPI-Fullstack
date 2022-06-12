@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FoodDeliveryAPI.Models;
 
@@ -10,7 +11,15 @@ namespace FoodDeliveryAPI.Repository
 
         User GetByUsername(string username);
 
+        public List<User> GetUnverifiedDeliverers();
+
+        public List<User> GetVerifiedDeliverers();
+
         void AddUser(User user);
+
+        void UpdateUser(User user);
+
+        void VerifyUser(string username);
 
         bool UserExists(string username);
     }

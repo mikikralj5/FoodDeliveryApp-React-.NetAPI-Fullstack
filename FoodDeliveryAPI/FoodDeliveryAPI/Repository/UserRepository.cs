@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodDeliveryAPI.Models;
@@ -26,9 +27,33 @@ namespace FoodDeliveryAPI.Repository
             return _context.Users.Where(i => i.Username == username).FirstOrDefault();
         }
 
+        public List<User> GetUnverifiedDeliverers()
+        {
+            return _context.Users.Where(i => i.Role == (UserType.DELIVERER).ToString() && i.Verified == (UserState.PENDING).ToString()).ToList();
+        }
+
+        public List<User> GetVerifiedDeliverers()
+        {
+            return _context.Users.Where(i => i.Role == (UserType.DELIVERER).ToString() && i.Verified == (UserState.CONFIRMED).ToString()).ToList();
+        }
+
+        public void UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            _context.SaveChanges();
+        }
+
         public bool UserExists(string username)
         {
             return _context.Users.Any(e => e.Username == username);
+        }
+
+        public void VerifyUser(string username)
+        {
+            User user = GetByUsername(username);
+            user.Verified = "CONFIRMED";
+
+            UpdateUser(user);
         }
     }
 }

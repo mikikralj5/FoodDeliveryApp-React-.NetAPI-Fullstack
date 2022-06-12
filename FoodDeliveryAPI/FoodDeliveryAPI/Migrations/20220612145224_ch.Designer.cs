@@ -4,6 +4,7 @@ using FoodDeliveryAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDeliveryAPI.Migrations
 {
     [DbContext(typeof(DeliveryContext))]
-    partial class DeliveryContextModelSnapshot : ModelSnapshot
+    [Migration("20220612145224_ch")]
+    partial class ch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,9 +100,33 @@ namespace FoodDeliveryAPI.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("RestaurantId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("FoodDeliveryAPI.Models.Restaurant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.User", b =>
@@ -160,9 +186,21 @@ namespace FoodDeliveryAPI.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("FoodDeliveryAPI.Models.Product", b =>
+                {
+                    b.HasOne("FoodDeliveryAPI.Models.Restaurant", null)
+                        .WithMany("RestaurantProducts")
+                        .HasForeignKey("RestaurantId");
+                });
+
             modelBuilder.Entity("FoodDeliveryAPI.Models.Order", b =>
                 {
                     b.Navigation("products");
+                });
+
+            modelBuilder.Entity("FoodDeliveryAPI.Models.Restaurant", b =>
+                {
+                    b.Navigation("RestaurantProducts");
                 });
 
             modelBuilder.Entity("FoodDeliveryAPI.Models.User", b =>

@@ -10,7 +10,8 @@ namespace FoodDeliveryAPI.DTOs
         public string Lastname { get; set; }
         public string Address { get; set; }
         public string Date { get; set; }
-       
+        public string Verified { get; set; }
+
         public UserProfileDto()
 		{
 		}

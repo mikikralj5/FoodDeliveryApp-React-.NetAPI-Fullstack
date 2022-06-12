@@ -52,14 +52,19 @@ namespace FoodDeliveryAPI
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddCors();
-            services.AddControllers().AddJsonOptions(opt =>
-            {
-                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+            //.AddJsonOptions(opt =>
+            //{
+            //    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            //});
 
             services.AddScoped<JwtService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+            services.AddScoped<IProductRepository, ProductRepository>();
+           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
