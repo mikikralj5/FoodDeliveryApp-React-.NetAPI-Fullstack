@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using FoodDeliveryAPI.DTOs.Cart;
+using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +19,16 @@ namespace FoodDeliveryAPI.Controllers
 
         private readonly IProductRepository _productRepository;
 
-        public ConsumerController(DeliveryContext context, IProductRepository productRepository)
+        private readonly ICartRepository _cartRepository;
+
+        private readonly IUserRepository _userRepository;
+
+        public ConsumerController(DeliveryContext context, IProductRepository productRepository,ICartRepository cartRepository,IUserRepository userRepository)
         {
             _context = context;
             _productRepository = productRepository;
+            _cartRepository = cartRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet("GetProducts")]
@@ -27,5 +36,37 @@ namespace FoodDeliveryAPI.Controllers
         {
             return Ok(_productRepository.GetProducts());
         }
+
+        [HttpPost("AddCartitem")]
+        public IActionResult AddCartItem([FromBody] CartItemDto cartItemDto)
+        {
+            var productTemp = _productRepository.GetById(cartItemDto.ProductId);
+            CartItem carItem = new CartItem();
+            carItem.Product = productTemp;
+            //carItem.Amount = cartItemDto.Amount;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(username);
+
+            var cartItemTemp = user.UserCart.CartItems.FirstOrDefault(i => i.Product?.Id.ToString() == cartItemDto.ProductId);
+            if(cartItemTemp == null)
+            {
+                carItem.Amount = 1;
+                user.UserCart.CartItems.Add(carItem);
+            }
+            else
+            {
+                user.UserCart.CartItems.FirstOrDefault(i => i.Id == cartItemTemp.Id).Amount += 1;
+            }
+           
+
+            _userRepository.UpdateUser(user);
+
+            return Ok("Dodat item u cart");
+        }
+       
     }
 }

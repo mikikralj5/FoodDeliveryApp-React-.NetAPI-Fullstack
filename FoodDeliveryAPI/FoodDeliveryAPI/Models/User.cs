@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Newtonsoft.Json.Converters;
 
 namespace FoodDeliveryAPI.Models
@@ -34,8 +35,11 @@ namespace FoodDeliveryAPI.Models
         public string Role { get; set; }
         public byte[] Picture { get; set; }
         public List<Order> Orders { get; set; }
-        public Cart UserCart { get; set; }
+        private Cart userCart;
         public string Verified { get; set; }
+        public ILazyLoader LazyLoader{get;set;}
+
+        public Cart UserCart { get => LazyLoader.Load(this, ref userCart); set => userCart = value; }
 
         public User()
         {

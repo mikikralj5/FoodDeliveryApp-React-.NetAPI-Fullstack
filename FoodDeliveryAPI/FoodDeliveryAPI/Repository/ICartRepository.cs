@@ -7,6 +7,10 @@ namespace FoodDeliveryAPI.Repository
 	{
 		void Add(Cart cart);
 
+		void AddCartItem(CartItem cartItem, int cartId);
+
+		void UpdateCart(Cart cart, User user);
+
 		
 	}
 }
