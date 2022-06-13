@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using FoodDeliveryAPI.DTOs.Cart;
+using FoodDeliveryAPI.DTOs.Order;
 using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Http;
@@ -23,12 +25,18 @@ namespace FoodDeliveryAPI.Controllers
 
         private readonly IUserRepository _userRepository;
 
-        public ConsumerController(DeliveryContext context, IProductRepository productRepository, ICartRepository cartRepository, IUserRepository userRepository)
+        private readonly IOrderRepository _orderRepository;
+
+        private readonly IMapper _mapper;
+
+        public ConsumerController(DeliveryContext context, IProductRepository productRepository, ICartRepository cartRepository, IUserRepository userRepository,IMapper mapper, IOrderRepository orderRepository)
         {
             _context = context;
             _productRepository = productRepository;
             _cartRepository = cartRepository;
             _userRepository = userRepository;
+            _orderRepository = orderRepository;
+            _mapper = mapper;
         }
 
         [HttpGet("GetProducts")]
@@ -86,6 +94,51 @@ namespace FoodDeliveryAPI.Controllers
            _cartRepository.DeleteCartItem(deleteCartItemDto.CartItemId);
 
             return Ok("obrisan");
+        }
+
+        [HttpPost("PlaceOrder")]
+        public IActionResult PlaceOrder([FromBody] PlaceOrderDto placeOrderDto)
+        {
+            Order newOrder = _mapper.Map<Order>(placeOrderDto);
+
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(username);
+
+            if(newOrder.Products == null)
+            {
+                newOrder.Products = new List<OrderItem>();
+            }
+
+            if(user.Orders == null)
+            {
+                user.Orders = new List<Order>();
+            }
+
+            List<SaveOrderItemDto> temp = _mapper.Map<List<SaveOrderItemDto>>(user.UserCart.CartItems);
+
+            newOrder.Products.AddRange(_mapper.Map<List<OrderItem>>(temp));
+
+            double sum = 0;
+            foreach(var item in newOrder.Products)
+            {
+                sum += item.Amount * item.Product.Price;
+            }
+
+            newOrder.TotalPrice = sum;
+
+            _orderRepository.MakeOrder(newOrder);
+
+            user.Orders.Add(newOrder);
+
+            user.UserCart.CartItems.Clear();
+
+            _userRepository.UpdateUser(user);
+
+            return Ok("order placed");
         }
        
     }

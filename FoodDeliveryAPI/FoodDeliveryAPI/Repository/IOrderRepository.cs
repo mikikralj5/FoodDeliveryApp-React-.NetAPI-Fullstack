@@ -5,7 +5,9 @@ namespace FoodDeliveryAPI.Repository
 {
 	public interface IOrderRepository
 	{
-		void Add(Order order);
+
+
+		void MakeOrder(Order order);
 	}
 }
 

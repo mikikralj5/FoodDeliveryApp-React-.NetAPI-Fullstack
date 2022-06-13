@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Newtonsoft.Json.Converters;
@@ -25,6 +26,7 @@ namespace FoodDeliveryAPI.Models
     {
 
         [Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
