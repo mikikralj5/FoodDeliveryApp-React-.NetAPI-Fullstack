@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FoodDeliveryAPI.Models;
 
@@ -13,23 +14,22 @@ namespace FoodDeliveryAPI.Repository
             _context = context;
         }
 
-        public void Add(Cart cart)
+        public void DeleteCartItem( int cartItemId)
         {
-             _context.Add(cart);
+            var cartItem = _context.CartItems.Where(i => i.Id == cartItemId).FirstOrDefault();
+            _context.CartItems.Remove(cartItem);
             _context.SaveChanges();
         }
 
-        public void AddCartItem(CartItem cartItem, int cartId)
+       
+
+        public List<CartItem> GetCartItems(string cartId)
         {
-            Cart cartTemp = _context.Cart.Where(i => i.Id == cartId).FirstOrDefault();
-            cartTemp.CartItems.Add(cartItem);
-            _context.SaveChanges();
+            return _context.Cart.Where(i => i.Id.ToString() == cartId).FirstOrDefault().CartItems.ToList();
         }
 
-        public void UpdateCart(Cart cart, User user)
-        {
-            
-        }
+       
+
     }
 }
 

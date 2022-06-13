@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using FoodDeliveryAPI.Models;
 
 namespace FoodDeliveryAPI.Repository
 {
 	public interface ICartRepository
 	{
-		void Add(Cart cart);
+		List<CartItem> GetCartItems(string cartId);
 
-		void AddCartItem(CartItem cartItem, int cartId);
-
-		void UpdateCart(Cart cart, User user);
+		void DeleteCartItem(int cartItemId);
 
 		
 	}

@@ -23,7 +23,7 @@ namespace FoodDeliveryAPI.Controllers
 
         private readonly IUserRepository _userRepository;
 
-        public ConsumerController(DeliveryContext context, IProductRepository productRepository,ICartRepository cartRepository,IUserRepository userRepository)
+        public ConsumerController(DeliveryContext context, IProductRepository productRepository, ICartRepository cartRepository, IUserRepository userRepository)
         {
             _context = context;
             _productRepository = productRepository;
@@ -52,7 +52,7 @@ namespace FoodDeliveryAPI.Controllers
             User user = _userRepository.GetByUsername(username);
 
             var cartItemTemp = user.UserCart.CartItems.FirstOrDefault(i => i.Product?.Id.ToString() == cartItemDto.ProductId);
-            if(cartItemTemp == null)
+            if (cartItemTemp == null)
             {
                 carItem.Amount = 1;
                 user.UserCart.CartItems.Add(carItem);
@@ -61,11 +61,31 @@ namespace FoodDeliveryAPI.Controllers
             {
                 user.UserCart.CartItems.FirstOrDefault(i => i.Id == cartItemTemp.Id).Amount += 1;
             }
-           
+
 
             _userRepository.UpdateUser(user);
 
             return Ok("Dodat item u cart");
+        }
+
+        [HttpGet("GetCartItems")]
+        public IActionResult GetCartItems()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(username);
+
+            return Ok(_cartRepository.GetCartItems(user.UserCart.Id.ToString()));
+        }
+
+        [HttpPost("DeleteCartItem")]
+        public IActionResult DeleteCartItem([FromBody] DeleteCartItemDto deleteCartItemDto)
+        {  
+           _cartRepository.DeleteCartItem(deleteCartItemDto.CartItemId);
+
+            return Ok("obrisan");
         }
        
     }
