@@ -1,13 +1,16 @@
-import './App.css';
+import "./App.css";
 
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Register from './components/Register';
-import Login from './components/Login';
-import Navbar from './components/Navbar';
-import CardItem from './components/CardItem';
-import UpdateUser from './components/UpdateUser';
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Navbar from "./components/Navbar";
+import CardItem from "./components/CardItem";
+import UpdateUser from "./components/UpdateUser";
+import ProductItem from "./components/ProductItem";
+import ProductList from "./components/ProductList";
+import AddProduct from "./components/AddProduct";
 
 function App() {
   const [test, setTest] = useState([]);
@@ -37,6 +40,15 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/update" element={<UpdateUser />} />
+        </Routes>
+        <Routes>
+          <Route path="/productItem" element={<ProductItem />} />
+        </Routes>
+        <Routes>
+          <Route path="/productList" element={<ProductList />} />
+        </Routes>
+        <Routes>
+          <Route path="/addProduct" element={<AddProduct />} />
         </Routes>
       </div>
     </Router>

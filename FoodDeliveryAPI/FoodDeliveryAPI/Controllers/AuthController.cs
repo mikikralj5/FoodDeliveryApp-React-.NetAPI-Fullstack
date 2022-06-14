@@ -91,7 +91,7 @@ namespace FoodDeliveryAPI.Controllers
                 HttpOnly = true
             });
 
-            return Ok(token);
+            return Ok(token); ;
         }
 
         [HttpGet("GetUserProfile")]

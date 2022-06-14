@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FoodDeliveryAPI.Models;
 
 namespace FoodDeliveryAPI.Repository
@@ -12,7 +13,10 @@ namespace FoodDeliveryAPI.Repository
             _context = context;
         }
 
-      
+        public List<Order> GetPendingOrders()
+        {
+            throw new NotImplementedException();
+        }
 
         public void MakeOrder(Order order)
         {

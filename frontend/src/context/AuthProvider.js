@@ -1,10 +1,11 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [chosenProducts, setChosenProducts] = useState([]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth, loggedIn, setLoggedIn }}>
