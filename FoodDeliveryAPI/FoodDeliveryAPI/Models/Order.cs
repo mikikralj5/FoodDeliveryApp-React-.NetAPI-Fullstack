@@ -21,7 +21,7 @@ namespace FoodDeliveryAPI.Models
         public string OrderAddress { get; set; }
         public string Comment { get; set; }
         public double TotalPrice { get; set; }
-        public string Pending { get; set; }
+        public string OrderState { get; set; }
         public int DeliveryTime { get; set; }
         public ILazyLoader LazyLoader { get; set; }
 

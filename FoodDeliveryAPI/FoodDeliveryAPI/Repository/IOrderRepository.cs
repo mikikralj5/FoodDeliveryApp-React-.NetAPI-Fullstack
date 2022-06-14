@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FoodDeliveryAPI.Models;
 
 namespace FoodDeliveryAPI.Repository
@@ -8,6 +9,9 @@ namespace FoodDeliveryAPI.Repository
 
 
 		void MakeOrder(Order order);
+
+		List<Order> GetPendingOrders();
+
 	}
 }
 

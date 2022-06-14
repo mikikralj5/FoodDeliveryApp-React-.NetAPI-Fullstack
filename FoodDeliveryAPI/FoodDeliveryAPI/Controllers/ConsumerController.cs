@@ -129,6 +129,7 @@ namespace FoodDeliveryAPI.Controllers
             }
 
             newOrder.TotalPrice = sum;
+            newOrder.OrderState = "PENDING";
 
             _orderRepository.MakeOrder(newOrder);
 
