@@ -1,20 +1,23 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import TransferInput from "./TransferInput";
-import { useGlobalContext } from "../context/AuthProvider";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TransferInput from './TransferInput';
+import Add from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
+import { useGlobalContext } from '../context/AuthProvider';
 
-import TextField from "@mui/material/TextField";
+import TextField from '@mui/material/TextField';
+import { ReplayOutlined } from '@mui/icons-material';
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -22,8 +25,49 @@ const style = {
 export default function AddProduct() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const { right, setRight } = useGlobalContext();
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  };
+  const { chosenProducts, setChosenProducts, auth } = useGlobalContext();
+  const [name, setName] = React.useState('');
+  const [price, setPrice] = React.useState('');
+
+  const handleClick = async () => {
+    const ingredients = chosenProducts.toString();
+    console.log(ingredients);
+    console.log(name);
+    console.log(price);
+    try {
+      const respp = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/AddProduct`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            Authorization: 'Bearer ' + auth.token,
+          },
+          body: JSON.stringify({
+            name: name,
+            price: price,
+            ingredients: ingredients,
+          }),
+        }
+      );
+      if (respp.ok) {
+        const jsoned = await respp.json();
+        handleClose();
+      } else if (respp.status === 401) {
+        console.log('Unathorized');
+      } else if (respp.status === 400) {
+        console.log('bad username or password');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div>
@@ -35,17 +79,52 @@ export default function AddProduct() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ marginLeft: 29 }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             Add Product
           </Typography>
           <TextField
             id="name"
             name="name"
-            label="product name"
+            label="Product Name"
             variant="standard"
-            sx={{ marginBottom: 10 }}
+            sx={{ marginBottom: 5, marginLeft: 7 }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            id="price"
+            name="price"
+            label="Product Price"
+            variant="standard"
+            sx={{ marginBottom: 5, marginLeft: 7 }}
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
           />
           <TransferInput></TransferInput>
+          <Stack spacing={20} direction="row">
+            <Button
+              variant="outlined"
+              component="label"
+              color="primary"
+              sx={{ mt: 1, mb: 1, ml: 6 }}
+            >
+              {' '}
+              <Add /> Upload a picture
+              <input type="file" name="picture" hidden />
+            </Button>
+            <Button
+              sx={{ height: 40, mt: 1, marginLeft: 55 }}
+              variant="outlined"
+              onClick={() => handleClick()}
+            >
+              Add product
+            </Button>
+          </Stack>
         </Box>
       </Modal>
     </div>
