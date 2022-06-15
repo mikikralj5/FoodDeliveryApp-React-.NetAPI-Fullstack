@@ -11,7 +11,7 @@ const dashboardItems = [
     url: '/6.png',
     title: 'New order',
     width: '33%',
-    redirectUrl: '/register',
+    redirectUrl: '/productList',
   },
   {
     id: 3,

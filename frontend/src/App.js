@@ -1,16 +1,17 @@
-import "./App.css";
+import './App.css';
 
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Register from "./components/Register";
-import Login from "./components/Login";
-import Navbar from "./components/Navbar";
-import CardItem from "./components/CardItem";
-import UpdateUser from "./components/UpdateUser";
-import ProductItem from "./components/ProductItem";
-import ProductList from "./components/ProductList";
-import AddProduct from "./components/AddProduct";
+import Register from './components/Register';
+import Login from './components/Login';
+import Navbar from './components/Navbar';
+import CardItem from './components/CardItem';
+import UpdateUser from './components/UpdateUser';
+import ProductItem from './components/ProductItem';
+import ProductList from './components/ProductList';
+import AddProduct from './components/AddProduct';
+import CartContainer from './components/CartContainer';
 
 function App() {
   const [test, setTest] = useState([]);
@@ -49,6 +50,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/addProduct" element={<AddProduct />} />
+        </Routes>
+        <Routes>
+          <Route path="/cart" element={<CartContainer />} />
         </Routes>
       </div>
     </Router>
