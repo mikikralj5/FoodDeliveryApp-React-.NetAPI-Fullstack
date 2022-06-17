@@ -23,7 +23,6 @@
     <None Remove="DTOs\Product\" />
     <None Remove="Migrations\" />
     <None Remove="DTOs\Order\" />
-    <None Remove="DTOs\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
@@ -48,6 +47,5 @@
     <Folder Include="DTOs\Product\" />
     <Folder Include="Migrations\" />
     <Folder Include="DTOs\Order\" />
-    <Folder Include="DTOs\Cart\" />
   </ItemGroup>
 </Project>

@@ -1,13 +1,13 @@
-import React from 'react';
-import CartItem from './CartItem.jsx';
-import { useGlobalContext } from '../context/AuthProvider';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
+import React from "react";
+import CartItem from "./CartItem.jsx";
+import { useGlobalContext } from "../context/AuthProvider";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 const CartContainer = () => {
   const { cart, setCart, total, clearCart, auth } = useGlobalContext();
-  const [comment, setComment] = React.useState('');
-  const [address, setAddress] = React.useState('');
+  const [comment, setComment] = React.useState("");
+  const [address, setAddress] = React.useState("");
   /*if (cartItems.length === 0) {
     return (
       <section className="cart">
@@ -34,20 +34,21 @@ const CartContainer = () => {
     console.log(proba);
     try {
       const resp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/Register`,
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/PlaceOrder`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + auth.token,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + auth.token,
           },
           body: JSON.stringify({
             // name: "aa",
             products: cart,
             orderAddress: address,
             comment: comment,
+            totalPrice: total,
           }),
         }
       );

@@ -63,7 +63,6 @@ namespace FoodDeliveryAPI
             services.AddScoped<JwtService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
            
 
