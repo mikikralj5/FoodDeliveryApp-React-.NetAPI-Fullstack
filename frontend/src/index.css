@@ -28,6 +28,7 @@ Variables
   --clr-grey-10: #f1f5f8;
   --clr-white: #fff;
   --clr-red-dark: hsl(360, 67%, 44%);
+  --clr-green-dark: rgb(6, 134, 238);
   --clr-red-light: hsl(360, 71%, 66%);
   --transition: all 0.3s linear;
   --spacing: 0.25rem;
@@ -248,6 +249,21 @@ Cart
   border-radius: var(--radius);
 }
 
+.order-btn {
+  background: transparent;
+  padding: 0.5rem 1rem;
+  color: var(--clr-green-dark);
+  border: 1px solid var(--clr-green-dark);
+  margin-top: 2.25rem;
+  border-radius: var(--radius);
+}
+
+.clear-btn:hover {
+  background: var(--clr-red-light);
+  color: var(--clr-red-dark);
+  border-color: var(--clr-red-light);
+}
+
 .clear-btn:hover {
   background: var(--clr-red-light);
   color: var(--clr-red-dark);
@@ -325,3 +341,16 @@ hr {
   border-color: transparent;
   border-width: 0.25px;
 }
+
+#container {
+  display: flex;
+  /* establish flex container */
+  flex-direction: row;
+  /* default value; can be omitted */
+  flex-wrap: nowrap;
+  /* default value; can be omitted */
+  justify-content: space-between;
+  /* switched from default (flex-start, see below) */
+ 
+}
+

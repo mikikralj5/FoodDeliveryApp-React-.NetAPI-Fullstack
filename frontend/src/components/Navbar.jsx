@@ -23,7 +23,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const pages = ['Register', 'Login'];
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const { loggedIn, setAuth, auth, setLoggedIn } = useGlobalContext();
+  const { loggedIn, setAuth, auth, setLoggedIn, amount } = useGlobalContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -133,10 +133,17 @@ const ResponsiveAppBar = () => {
                   >
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
+
+                  <div className="nav-container"></div>
                   <MenuItem key="cart" onClick={() => handleClickBtn('Cart')}>
                     <ShoppingCartIcon
                       sx={{ fontSize: 40, color: 'white' }}
                     ></ShoppingCartIcon>
+                    <div className="amount-container">
+                      <p color="white" className="total-amount">
+                        {amount}
+                      </p>
+                    </div>
                   </MenuItem>
                 </div>
               ) : (

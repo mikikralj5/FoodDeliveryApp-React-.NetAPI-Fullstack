@@ -1,19 +1,25 @@
-import { createContext, useContext, useState, useReducer } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useReducer,
+  useEffect,
+} from 'react';
 import reducer from './reducer';
 const AuthContext = createContext();
 
+const initialState = {
+  cart: [],
+  total: 0,
+  amount: 0,
+};
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [chosenProducts, setChosenProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   //  const [cart, setCart] = useState([]);
-  const initialState = {
-    cart: [],
-    total: 0,
-    amount: 0,
-  };
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' });
   };
@@ -28,7 +34,17 @@ const AuthProvider = ({ children }) => {
     dispatch({ type: 'REMOVE', payload: id });
   };
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const increase = (id) => {
+    dispatch({ type: 'INCREASE', payload: id });
+  };
+  const decrease = (id) => {
+    dispatch({ type: 'DECREASE', payload: id });
+  };
+
+  useEffect(() => {
+    dispatch({ type: 'GET_TOTALS' });
+  }, [state.cart]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -43,9 +59,12 @@ const AuthProvider = ({ children }) => {
         //  cart,
         //  setCart,
         ...state,
+
         clearCart,
         addToCart,
         remove,
+        increase,
+        decrease,
       }}
     >
       {children}

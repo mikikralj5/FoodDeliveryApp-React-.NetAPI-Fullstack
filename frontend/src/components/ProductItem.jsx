@@ -31,6 +31,7 @@ export default function ProductItem({ id, price, name, ingredients }) {
       name: name,
       price: price,
       ingredients: ingredients,
+      amount: 1,
     };
     setCart((items) => [...items, newItem]);
     console.log(id, name, price, ingredients);
