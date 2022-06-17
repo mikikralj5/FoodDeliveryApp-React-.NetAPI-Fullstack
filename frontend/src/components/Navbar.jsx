@@ -73,6 +73,9 @@ const ResponsiveAppBar = () => {
     if (page === 'Products') {
       navigate('./productList');
     }
+    if (page === 'Verify') {
+      navigate('./Users');
+    }
   };
 
   return (
@@ -208,6 +211,13 @@ const ResponsiveAppBar = () => {
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Products
+                </Button>
+                <Button
+                  key="verify"
+                  onClick={() => handleClickBtn('Verify')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Verify Users
                 </Button>
               </Stack>
             ) : (

@@ -12,6 +12,8 @@ import ProductItem from './components/ProductItem';
 import ProductList from './components/ProductList';
 import AddProduct from './components/AddProduct';
 import CartContainer from './components/CartContainer';
+import Users from './components/UserItem';
+import UserItem from './components/UserItem';
 
 function App() {
   const [test, setTest] = useState([]);
@@ -53,6 +55,12 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/cart" element={<CartContainer />} />
+        </Routes>
+        <Routes>
+          <Route path="/users" element={<Users />} />
+        </Routes>
+        <Routes>
+          <Route path="/userItem" element={<UserItem />} />
         </Routes>
       </div>
     </Router>
