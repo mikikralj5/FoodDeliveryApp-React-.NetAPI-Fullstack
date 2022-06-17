@@ -96,8 +96,13 @@ namespace FoodDeliveryAPI.Controllers
             return Ok("obrisan");
         }
 
+        
+       
+
+       
+
         [HttpPost("PlaceOrder")]
-        public IActionResult PlaceOrder([FromBody] PlaceOrderDto placeOrderDto)
+        public IActionResult PlaceOrder([FromBody] NewOrderDto placeOrderDto)
         {
             Order newOrder = _mapper.Map<Order>(placeOrderDto);
 
@@ -141,6 +146,7 @@ namespace FoodDeliveryAPI.Controllers
 
             return Ok("order placed");
         }
+
        
     }
 }
