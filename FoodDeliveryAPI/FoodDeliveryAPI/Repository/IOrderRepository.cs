@@ -19,6 +19,8 @@ namespace FoodDeliveryAPI.Repository
 		void UpdateOrder(Order order);
 
 		Order GetById(int id);
+
+		
 	}
 }
 

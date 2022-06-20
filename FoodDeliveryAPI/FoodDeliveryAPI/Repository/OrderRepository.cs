@@ -33,10 +33,16 @@ namespace FoodDeliveryAPI.Repository
                 ConsumerOrders.Where(i => i.OrderState == OrderState.FINISHED.ToString()).ToList();
         }
 
+        public List<Order> GetFinishedAndInProgress()
+        {
+            return _context.Orders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString() || i.OrderState == OrderState.FINISHED.ToString()).ToList();
+        }
+
         public List<Order> GetPendingOrders()
         {
             return _context.Orders.Where(i => i.OrderState == OrderState.PENDING.ToString()).ToList();
         }
+
 
         public void MakeOrder(Order order)
         {

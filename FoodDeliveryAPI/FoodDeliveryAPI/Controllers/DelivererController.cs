@@ -64,7 +64,7 @@ namespace FoodDeliveryAPI.Controllers
             _userRepository.UpdateUser(user);
 
             //_orderRepository.ChangeOrderState(orderStateDto.State, orderStateDto.Id);
-            return Ok();
+            return Ok(order.DeliveryTime);
         }
 
         [HttpPost("FinishOrder/{id}")]
@@ -88,6 +88,12 @@ namespace FoodDeliveryAPI.Controllers
 
             return Ok(user.DelivererOrders.Where(i => i.OrderState == OrderState.FINISHED.ToString()));
 
+        }
+
+        [HttpGet("GetOrderById/{id}")]
+        public IActionResult GetOrderById(string id)
+        {
+            return Ok(_orderRepository.GetById(Int32.Parse(id)));
         }
 
 
