@@ -3,6 +3,7 @@ import { useGlobalContext } from "../context/AuthProvider";
 import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 const VerifyOrderItem = ({
   id,
   totalPrice,
@@ -14,11 +15,11 @@ const VerifyOrderItem = ({
   username,
 }) => {
   const { auth } = useGlobalContext();
-
+  const navigate = useNavigate();
   const handleClick = async () => {
     try {
       const respp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/AddProduct`,
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/AcceptOrder/${id}`,
         {
           method: "POST",
           headers: {
@@ -32,6 +33,7 @@ const VerifyOrderItem = ({
       if (respp.ok) {
         const jsoned = await respp.json();
         console.log(jsoned);
+        navigate("./myorder");
       }
     } catch (err) {
       console.log(err);
