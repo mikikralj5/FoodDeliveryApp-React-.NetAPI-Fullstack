@@ -77,8 +77,10 @@ const ResponsiveAppBar = () => {
       navigate("./Users");
     }
     if (page === "VerifyOrder") {
-      console.log("usao");
       navigate("./verifyorderlist");
+    }
+    if (page === "MyOrder") {
+      navigate("./myorder");
     }
   };
 
@@ -229,6 +231,13 @@ const ResponsiveAppBar = () => {
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Verify Order
+                </Button>
+                <Button
+                  key="myorder"
+                  onClick={() => handleClickBtn("MyOrder")}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  My order
                 </Button>
               </Stack>
             ) : (

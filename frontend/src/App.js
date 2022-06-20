@@ -16,6 +16,7 @@ import Users from "./components/Users";
 import UserItem from "./components/UserItem";
 import VerifyOrderItem from "./components/VerifyOrderItem";
 import VerifyOrderList from "./components/VerifyOrderList";
+import MyOrder from "./components/MyOrder";
 
 function App() {
   const [test, setTest] = useState([]);
@@ -36,39 +37,29 @@ function App() {
         <Navbar></Navbar>
         <Routes>
           <Route path="/register" element={<Register />} />
-        </Routes>
-        <Routes>
+
           <Route path="/login" element={<Login />} />
-        </Routes>
-        <Routes>
+
           <Route path="/dashboard" element={<CardItem />} />
-        </Routes>
-        <Routes>
+
           <Route path="/update" element={<UpdateUser />} />
-        </Routes>
-        <Routes>
+
           <Route path="/productItem" element={<ProductItem />} />
-        </Routes>
-        <Routes>
+
           <Route path="/productList" element={<ProductList />} />
-        </Routes>
-        <Routes>
+
           <Route path="/addProduct" element={<AddProduct />} />
-        </Routes>
-        <Routes>
+
           <Route path="/cart" element={<CartContainer />} />
-        </Routes>
-        <Routes>
+
           <Route path="/users" element={<Users />} />
-        </Routes>
-        <Routes>
+
           <Route path="/userItem" element={<UserItem />} />
-        </Routes>
-        <Routes>
+
           <Route path="/verifyorderitem" element={<VerifyOrderItem />} />
-        </Routes>
-        <Routes>
+
           <Route path="/verifyorderlist" element={<VerifyOrderList />} />
+          <Route path="/myorder" element={<MyOrder />} />
         </Routes>
       </div>
     </Router>
