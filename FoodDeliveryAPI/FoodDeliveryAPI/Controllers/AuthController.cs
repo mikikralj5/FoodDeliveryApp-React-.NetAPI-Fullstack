@@ -57,8 +57,10 @@ namespace FoodDeliveryAPI.Controllers
             {
                 newUser.Verified = "CONFIRMED";
             }
-           
-            
+
+            newUser.DelivererOrders = new List<Order>();
+            newUser.ConsumerOrders = new List<Order>();
+
              _userRepository.AddUser(newUser);
 
             return Ok(new { mess = "napravljen" });

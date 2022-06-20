@@ -15,6 +15,10 @@ namespace FoodDeliveryAPI.Repository
 		List<Order> GetCompletedOrdersByUser(string username);
 
 		void ChangeOrderState(string state, int id);
+
+		void UpdateOrder(Order order);
+
+		Order GetById(int id);
 	}
 }
 

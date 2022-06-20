@@ -22,6 +22,11 @@ namespace FoodDeliveryAPI.Repository
             _context.SaveChanges();
         }
 
+        public Order GetById(int id)
+        {
+            return _context.Orders.Where(i => i.Id == id).FirstOrDefault();
+        }
+
         public List<Order> GetCompletedOrdersByUser(string username)
         {          
             return _context.Users.Where(i => i.Username == username).FirstOrDefault().
@@ -39,7 +44,11 @@ namespace FoodDeliveryAPI.Repository
             _context.SaveChanges();
         }
 
-        
+        public void UpdateOrder(Order order)
+        {
+            _context.Orders.Update(order);
+            _context.SaveChanges();
+        }
     }
 }
 

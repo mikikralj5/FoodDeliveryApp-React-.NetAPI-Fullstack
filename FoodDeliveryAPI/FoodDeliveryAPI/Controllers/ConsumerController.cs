@@ -59,8 +59,10 @@ namespace FoodDeliveryAPI.Controllers
                 newOrder.Products.Add(orderItem);
             }
 
-            newOrder.TotalPrice = newOrderDto.TotalPrice;
+            newOrder.TotalPrice = newOrderDto.TotalPrice + 5;
             newOrder.OrderState = "PENDING";
+            newOrder.OrderAddress = newOrderDto.OrderAddress;
+            newOrder.Comment = newOrderDto.Comment;
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userClaims = identity.Claims;
