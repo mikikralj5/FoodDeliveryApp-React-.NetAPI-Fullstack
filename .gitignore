@@ -479,3 +479,4 @@ yarn-error.log*
 
 frontend/.env
 FoodDeliveryAPI/FoodDeliveryAPI/appsettings.json
+FoodDeliveryAPI/FoodDeliveryAPI/Migrations
