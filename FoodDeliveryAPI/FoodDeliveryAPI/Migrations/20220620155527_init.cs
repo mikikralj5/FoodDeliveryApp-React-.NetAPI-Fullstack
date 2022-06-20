@@ -10,19 +10,6 @@ namespace FoodDeliveryAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cart",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalPrice = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cart", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -50,42 +37,11 @@ namespace FoodDeliveryAPI.Migrations
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    UserCartId = table.Column<int>(type: "int", nullable: true),
                     Verified = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Username);
-                    table.ForeignKey(
-                        name: "FK_Users_Cart_UserCartId",
-                        column: x => x.UserCartId,
-                        principalTable: "Cart",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CartItem",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    CartId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CartItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CartItem_Cart_CartId",
-                        column: x => x.CartId,
-                        principalTable: "Cart",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CartItem_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -97,9 +53,10 @@ namespace FoodDeliveryAPI.Migrations
                     OrderAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
-                    Pending = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrderState = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryTime = table.Column<int>(type: "int", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Username1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,6 +64,11 @@ namespace FoodDeliveryAPI.Migrations
                     table.ForeignKey(
                         name: "FK_Orders_Users_Username",
                         column: x => x.Username,
+                        principalTable: "Users",
+                        principalColumn: "Username");
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_Username1",
+                        column: x => x.Username1,
                         principalTable: "Users",
                         principalColumn: "Username");
                 });
@@ -117,8 +79,8 @@ namespace FoodDeliveryAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -137,16 +99,6 @@ namespace FoodDeliveryAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItem_CartId",
-                table: "CartItem",
-                column: "CartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartItem_ProductId",
-                table: "CartItem",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -162,16 +114,13 @@ namespace FoodDeliveryAPI.Migrations
                 column: "Username");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserCartId",
-                table: "Users",
-                column: "UserCartId");
+                name: "IX_Orders_Username1",
+                table: "Orders",
+                column: "Username1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "CartItem");
-
             migrationBuilder.DropTable(
                 name: "OrderItems");
 
@@ -183,9 +132,6 @@ namespace FoodDeliveryAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Cart");
         }
     }
 }

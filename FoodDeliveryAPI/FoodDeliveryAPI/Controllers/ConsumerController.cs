@@ -68,12 +68,12 @@ namespace FoodDeliveryAPI.Controllers
 
             User user = _userRepository.GetByUsername(username);
 
-            if(user.Orders == null)
+            if(user.ConsumerOrders == null)
             {
-                user.Orders = new List<Order>();
+                user.ConsumerOrders = new List<Order>();
             }
 
-            user.Orders.Add(newOrder);
+            user.ConsumerOrders.Add(newOrder);
 
             _userRepository.UpdateUser(user);
 

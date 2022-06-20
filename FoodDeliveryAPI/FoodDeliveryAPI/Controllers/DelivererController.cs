@@ -28,14 +28,21 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(_orderRepository.GetPendingOrders());
         }
 
-        [HttpPost("ChangeOrderState")]
-        public IActionResult ChangeOrderState([FromBody] OrderStateDto orderStateDto)
+        [HttpPost("AcceptOrder")]
+        public IActionResult AcceptOrder([FromBody] OrderStateDto orderStateDto)
         {
             _orderRepository.ChangeOrderState(orderStateDto.State, orderStateDto.Id);
             return Ok();
         }
 
-       
+        [HttpPost("FinishOrder")]
+        public IActionResult FinishOrder([FromBody] OrderStateDto orderStateDto)
+        {
+            _orderRepository.ChangeOrderState(orderStateDto.State, orderStateDto.Id);
+            return Ok();
+        }
+
+
 
 
     }

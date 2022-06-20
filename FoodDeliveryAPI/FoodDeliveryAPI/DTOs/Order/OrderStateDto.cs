@@ -5,6 +5,7 @@ namespace FoodDeliveryAPI.DTOs.Order
 	{
 		public int Id { get; set; }
 		public string State { get; set; }
+		public DateTime AcceptTime { get; set; }
 
 		public OrderStateDto()
 		{

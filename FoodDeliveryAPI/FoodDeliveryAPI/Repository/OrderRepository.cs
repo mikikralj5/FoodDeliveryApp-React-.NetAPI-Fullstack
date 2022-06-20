@@ -25,7 +25,7 @@ namespace FoodDeliveryAPI.Repository
         public List<Order> GetCompletedOrdersByUser(string username)
         {          
             return _context.Users.Where(i => i.Username == username).FirstOrDefault().
-                Orders.Where(i => i.OrderState == OrderState.FINISHED.ToString()).ToList();
+                ConsumerOrders.Where(i => i.OrderState == OrderState.FINISHED.ToString()).ToList();
         }
 
         public List<Order> GetPendingOrders()

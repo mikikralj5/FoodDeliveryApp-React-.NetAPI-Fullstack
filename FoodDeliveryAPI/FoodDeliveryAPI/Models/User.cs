@@ -35,11 +35,14 @@ namespace FoodDeliveryAPI.Models
         public string Date { get; set; }
         public string Role { get; set; }
         public byte[] Picture { get; set; }
-        private List<Order> orders;
+        private List<Order> consumerOrders;
+        private List<Order> delivererOrders;
         public string Verified { get; set; }
         public ILazyLoader LazyLoader{get;set;}
 
-        public List<Order> Orders { get => LazyLoader.Load(this,ref orders); set => orders = value; }
+        public List<Order> ConsumerOrders { get => LazyLoader.Load(this,ref consumerOrders); set => consumerOrders = value; }
+
+        public List<Order> DelivererOrders { get => LazyLoader.Load(this, ref delivererOrders); set => delivererOrders = value; }
 
         public User()
         {
