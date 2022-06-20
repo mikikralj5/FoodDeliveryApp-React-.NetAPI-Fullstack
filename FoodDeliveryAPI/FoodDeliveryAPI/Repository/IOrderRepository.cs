@@ -12,6 +12,9 @@ namespace FoodDeliveryAPI.Repository
 
 		List<Order> GetPendingOrders();
 
+		List<Order> GetCompletedOrdersByUser(string username);
+
+		void ChangeOrderState(string state, int id);
 	}
 }
 

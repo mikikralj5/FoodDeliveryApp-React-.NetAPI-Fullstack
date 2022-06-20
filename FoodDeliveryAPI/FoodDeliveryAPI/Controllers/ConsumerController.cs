@@ -80,6 +80,19 @@ namespace FoodDeliveryAPI.Controllers
             return Ok("order placed");
         }
 
-       
+
+        [HttpGet("GetCompletedOrdersByUser")]
+        public IActionResult GetCompletedOrdersByUser()
+        {
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+
+            return Ok(_orderRepository.GetCompletedOrdersByUser(username));
+        }
+
+
     }
 }
