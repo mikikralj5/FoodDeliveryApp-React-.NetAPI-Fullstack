@@ -11,35 +11,11 @@ const MyOrder = () => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [order, setOrder] = useState(0);
-  var countDownDate = new Date("Jun 20, 2022 22:37:25").getTime();
-
-  var x = setInterval(function () {
-    // Get today's date and time
-    let now = new Date().getTime();
-
-    // Find the distance between now and the count down date
-    let distance = countDownDate - now;
-
-    // Time calculations for days, hours, minutes and seconds
-
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result in the element with id="demo"
-    setSeconds(seconds);
-    setMinutes(minutes);
-
-    // If the count down is finished, write some text
-    if (distance < 0) {
-      clearInterval(x);
-      document.getElementById("demo").innerHTML = "EXPIRED";
-    }
-  }, 1000);
 
   const fetchOrder = async () => {
     try {
       const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetUnverifiedDeliverers`,
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetInProgressOrder`,
         {
           method: "GET",
           headers: {
@@ -64,6 +40,35 @@ const MyOrder = () => {
   useEffect(() => {
     fetchOrder();
   }, []);
+
+  var countDownDate = new Date(
+    `Jun 22, 2022 ${order.deliveryTime}:00`
+  ).getTime();
+  console.log(order.deliveryTime);
+  console.log(countDownDate);
+
+  var x = setInterval(function () {
+    // Get today's date and time
+    let now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    let distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result in the element with id="demo"
+    setSeconds(seconds);
+    setMinutes(minutes);
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(x);
+      // document.getElementById("demo").innerHTML = "EXPIRED";
+    }
+  }, 1000);
 
   return (
     <Grid sx={{ ml: 4, mr: 4, mt: 5 }} container spacing={2}>
