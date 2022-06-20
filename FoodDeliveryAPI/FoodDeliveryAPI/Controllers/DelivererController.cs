@@ -107,7 +107,9 @@ namespace FoodDeliveryAPI.Controllers
 
             User user = _userRepository.GetByUsername(username);
 
-            return Ok(user.DelivererOrders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString()));
+            Order o = user.DelivererOrders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString()).FirstOrDefault();
+
+            return Ok(o);
 
         }
 

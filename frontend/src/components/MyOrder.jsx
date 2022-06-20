@@ -46,6 +46,7 @@ const MyOrder = () => {
   ).getTime();
   console.log(order.deliveryTime);
   console.log(countDownDate);
+  console.log(new Date().getTime());
 
   var x = setInterval(function () {
     // Get today's date and time
