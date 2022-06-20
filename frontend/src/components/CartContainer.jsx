@@ -48,7 +48,7 @@ const CartContainer = () => {
             products: cart,
             orderAddress: address,
             comment: comment,
-            totalPrice: total,
+            totalPrice: total + 5,
           }),
         }
       );

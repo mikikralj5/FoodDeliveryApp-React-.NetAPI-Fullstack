@@ -1,23 +1,23 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TransferInput from './TransferInput';
-import Add from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
-import { useGlobalContext } from '../context/AuthProvider';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import TransferInput from "./TransferInput";
+import Add from "@mui/icons-material/Add";
+import Stack from "@mui/material/Stack";
+import { useGlobalContext } from "../context/AuthProvider";
 
-import TextField from '@mui/material/TextField';
-import { ReplayOutlined } from '@mui/icons-material';
+import TextField from "@mui/material/TextField";
+import { ReplayOutlined } from "@mui/icons-material";
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -30,8 +30,8 @@ export default function AddProduct() {
     window.location.reload();
   };
   const { chosenProducts, setChosenProducts, auth } = useGlobalContext();
-  const [name, setName] = React.useState('');
-  const [price, setPrice] = React.useState('');
+  const [name, setName] = React.useState("");
+  const [price, setPrice] = React.useState("");
 
   const handleClick = async () => {
     const ingredients = chosenProducts.toString();
@@ -42,27 +42,23 @@ export default function AddProduct() {
       const respp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/AddProduct`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + auth.token,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + auth.token,
           },
           body: JSON.stringify({
-            name: name,
-            price: price,
-            ingredients: ingredients,
+            Name: name,
+            Price: price,
+            Ingredients: ingredients,
           }),
         }
       );
       if (respp.ok) {
         const jsoned = await respp.json();
         handleClose();
-      } else if (respp.status === 401) {
-        console.log('Unathorized');
-      } else if (respp.status === 400) {
-        console.log('bad username or password');
       }
     } catch (err) {
       console.log(err);
@@ -113,7 +109,7 @@ export default function AddProduct() {
               color="primary"
               sx={{ mt: 1, mb: 1, ml: 6 }}
             >
-              {' '}
+              {" "}
               <Add /> Upload a picture
               <input type="file" name="picture" hidden />
             </Button>

@@ -1,19 +1,21 @@
-import './App.css';
+import "./App.css";
 
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Register from './components/Register';
-import Login from './components/Login';
-import Navbar from './components/Navbar';
-import CardItem from './components/CardItem';
-import UpdateUser from './components/UpdateUser';
-import ProductItem from './components/ProductItem';
-import ProductList from './components/ProductList';
-import AddProduct from './components/AddProduct';
-import CartContainer from './components/CartContainer';
-import Users from './components/UserItem';
-import UserItem from './components/UserItem';
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Navbar from "./components/Navbar";
+import CardItem from "./components/CardItem";
+import UpdateUser from "./components/UpdateUser";
+import ProductItem from "./components/ProductItem";
+import ProductList from "./components/ProductList";
+import AddProduct from "./components/AddProduct";
+import CartContainer from "./components/CartContainer";
+import Users from "./components/Users";
+import UserItem from "./components/UserItem";
+import VerifyOrderItem from "./components/VerifyOrderItem";
+import VerifyOrderList from "./components/VerifyOrderList";
 
 function App() {
   const [test, setTest] = useState([]);
@@ -61,6 +63,12 @@ function App() {
         </Routes>
         <Routes>
           <Route path="/userItem" element={<UserItem />} />
+        </Routes>
+        <Routes>
+          <Route path="/verifyorderitem" element={<VerifyOrderItem />} />
+        </Routes>
+        <Routes>
+          <Route path="/verifyorderlist" element={<VerifyOrderList />} />
         </Routes>
       </div>
     </Router>

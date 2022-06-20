@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useGlobalContext } from '../context/AuthProvider';
-import ProductItem from './ProductItem';
-import Box from '@mui/material/Box';
-import ButtonBase from '@mui/material/ButtonBase';
-import Typography from '@mui/material/Typography';
-import AddProduct from './AddProduct';
-import Loading from './Loading';
+import React, { useState, useEffect } from "react";
+import { useGlobalContext } from "../context/AuthProvider";
+import ProductItem from "./ProductItem";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import Typography from "@mui/material/Typography";
+import AddProduct from "./AddProduct";
+import Loading from "./Loading";
 
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 export default function CocktailList() {
   const { auth, loading, setLoading } = useGlobalContext();
   const [products, setProducts] = useState([]);
@@ -18,12 +18,12 @@ export default function CocktailList() {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetProducts`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + auth.token,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + auth.token,
           },
         }
       );
@@ -51,18 +51,23 @@ export default function CocktailList() {
   }
 
   if (products.length < 1) {
-    return <h2 className="section-title">No products to display</h2>;
+    return (
+      <div>
+        <h2 className="section-title">No products to display</h2>
+        <AddProduct></AddProduct>
+      </div>
+    );
   }
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
+        display: "flex",
+        flexWrap: "wrap",
         minWidth: 300,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {products.map((item) => {

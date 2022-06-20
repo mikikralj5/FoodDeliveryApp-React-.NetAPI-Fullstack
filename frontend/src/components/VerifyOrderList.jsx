@@ -5,28 +5,19 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
+import VerifyOrderItem from "./VerifyOrderItem.jsx";
 import Loading from "./Loading";
-import UserItem from "./UserItem";
-const Users = () => {
+const VerifyOrderList = () => {
   const { auth, loading, setLoading } = useGlobalContext();
-  /*if (cartItems.length === 0) {
-    return (
-      <section className="cart">
-        {/* cart header }
-        <header>
-          <h2>your bag</h2>
-          <h4 className="empty-cart">is currently empty</h4>
-        </header>
-      </section>
-    );
-  }*/
-  const [users, setUsers] = useEffect([]);
 
-  const fetchUsers = async () => {
+  const [orders, setOrders] = useState([]);
+
+  const fetchOrders = async () => {
+    console.log("kurac");
     setLoading(true);
     try {
       const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/GetUnverifiedDeliverers`,
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetPendingOrders`,
         {
           method: "GET",
           headers: {
@@ -41,10 +32,10 @@ const Users = () => {
       console.log(data);
 
       if (data) {
-        setUsers(data);
-        console.log(users);
+        setOrders(data);
+        console.log(orders);
       } else {
-        setUsers([]);
+        setOrders([]);
       }
       setLoading(false);
     } catch (error) {
@@ -53,25 +44,36 @@ const Users = () => {
     }
   };
   useEffect(() => {
-    fetchUsers();
+    fetchOrders();
   }, []);
 
   if (loading) {
     return <Loading />;
   }
+
+  if (orders.length === 0) {
+    return (
+      <section className="cart">
+        <header>
+          <h4 className="empty-cart">There are no pending orders</h4>
+        </header>
+      </section>
+    );
+  }
+
   return (
     <section className="cart">
       <header>
-        <h2>pending users</h2>
+        <h2>pending orders</h2>
       </header>
 
       <div>
-        {users.map((item) => {
-          return <UserItem key={item.id} {...item} />;
+        {orders.map((item) => {
+          return <VerifyOrderItem key={item.id} {...item} />;
         })}
       </div>
     </section>
   );
 };
 
-export default Users;
+export default VerifyOrderList;
