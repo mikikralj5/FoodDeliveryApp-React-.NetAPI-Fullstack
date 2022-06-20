@@ -64,7 +64,7 @@ namespace FoodDeliveryAPI.Controllers
             _userRepository.UpdateUser(user);
 
             //_orderRepository.ChangeOrderState(orderStateDto.State, orderStateDto.Id);
-            return Ok();
+            return Ok(order.DeliveryTime);
         }
 
         [HttpPost("FinishOrder/{id}")]
@@ -87,6 +87,27 @@ namespace FoodDeliveryAPI.Controllers
             User user = _userRepository.GetByUsername(username);
 
             return Ok(user.DelivererOrders.Where(i => i.OrderState == OrderState.FINISHED.ToString()));
+
+        }
+
+        [HttpGet("GetOrderById/{id}")]
+        public IActionResult GetOrderById(string id)
+        {
+            return Ok(_orderRepository.GetById(Int32.Parse(id)));
+        }
+
+
+        [HttpGet("GetInProgressOrder")]
+        public IActionResult GetInProgressOrder()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+
+            User user = _userRepository.GetByUsername(username);
+
+            return Ok(user.DelivererOrders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString()));
 
         }
 

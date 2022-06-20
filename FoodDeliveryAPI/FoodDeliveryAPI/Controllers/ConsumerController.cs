@@ -95,6 +95,18 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(_orderRepository.GetCompletedOrdersByUser(username));
         }
 
+        [HttpGet("GetOrdersInProgress")]
+        public IActionResult GetOrersInProgress()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(username);
+
+            return Ok(user.DelivererOrders);
+        }
+
 
     }
 }
