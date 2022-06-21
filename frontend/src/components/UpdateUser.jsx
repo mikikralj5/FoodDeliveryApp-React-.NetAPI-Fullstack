@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import { ConnectingAirportsOutlined, ContactMail } from "@mui/icons-material";
 import { useGlobalContext } from "../context/AuthProvider";
 import httpClient from "../httpClient";
+import ConsumerService from "../APIService/ConsumerService";
 
 const theme = createTheme();
 
@@ -28,53 +29,18 @@ const UpdateUser = () => {
 
   const getUser = async () => {
     setLoading(true);
-    try {
-      const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetUserProfile`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
-          },
-        }
-      );
 
-      const string = await response.text();
-      const json = string === "" ? {} : JSON.parse(string);
-      console.log(json);
-      //  setName(json.name);
-      // console.log(name);
-      setUser((user) => ({
-        ...user,
-        firstname: json.firstname,
-        lastname: json.lastname,
-        email: json.email,
-        address: json.address,
-        username: json.username,
-      }));
-      console.log(user);
+    const json = await ConsumerService.UpdateUserGet();
 
-      //  return json;
-
-      /*    console.log('uso');
-      const data = await response.json();
-
-      console.log(data);
-   //   console.log('uso2');
-      const { info } = data;
-      if (info) {
-        console.log(info);
-      } else {
-        console.log('nista');
-      }
-      setLoading(false);*/
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
+    setUser((user) => ({
+      ...user,
+      firstname: json.firstname,
+      lastname: json.lastname,
+      email: json.email,
+      address: json.address,
+      username: json.username,
+    }));
+    console.log(user);
   };
 
   useEffect(() => {
@@ -84,31 +50,13 @@ const UpdateUser = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const resp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UpdateUserProfile`,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            address: user.address,
-            username: user.username,
-          }),
-        }
-      );
-
-      const dataa = await resp.json();
-      console.log(dataa.mess);
-    } catch (err) {
-      console.log(err);
-    }
+    const dataa = await ConsumerService.UpdateUserPut({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      address: user.address,
+      username: user.username,
+    });
   };
 
   return (

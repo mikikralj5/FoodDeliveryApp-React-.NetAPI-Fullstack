@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import httpClient from "../httpClient";
 import { useGlobalContext } from "../context/AuthProvider";
 import Alert from "@mui/material/Alert";
+import ConsumerService from "../APIService/ConsumerService";
 const theme = createTheme();
 
 const Login = () => {
@@ -32,24 +33,14 @@ const Login = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     //   console.log(data);
+
     try {
-      const respp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/Login`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({
-            password: data.get("password"),
-            username: data.get("username"),
-          }),
-        }
-      );
+      const respp = await ConsumerService.LogInUser({
+        password: data.get("password"),
+        username: data.get("username"),
+      });
+      const jsoned = await respp.json();
       if (respp.ok) {
-        const jsoned = await respp.json();
         setLoggedIn(true);
         localStorage.setItem("token", jsoned);
         localStorage.setItem("loggedIn", true);
@@ -67,13 +58,14 @@ const Login = () => {
       } else if (respp.status === 401) {
         console.log("Unathorized");
       } else if (respp.status === 400) {
-        console.log("bad username or password");
+        //console.log("bad username or password");
       } else if (respp.status === 404) {
         setError(true);
         console.log("bad username or password");
+        console.log(jsoned.message);
       }
     } catch (err) {
-      console.log(err);
+      //console.log(err);
     }
   };
 

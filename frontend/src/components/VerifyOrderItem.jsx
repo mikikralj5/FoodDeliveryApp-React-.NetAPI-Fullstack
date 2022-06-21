@@ -4,6 +4,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import DelivererService from "../APIService/DelivererService";
 
 const VerifyOrderItem = ({
   id,
@@ -21,29 +22,14 @@ const VerifyOrderItem = ({
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    try {
-      const respp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/AcceptOrder/${id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      if (respp.ok) {
-        const jsoned = await respp.json();
-        console.log(jsoned);
-        navigate("../myorder");
-      } else if (respp.status === 400) {
-        console.log("cant again");
-        setError(true);
-      }
-    } catch (err) {
-      console.log(err);
+    const respp = await DelivererService.AcceptOrder(id);
+    if (respp.ok) {
+      const jsoned = await respp.json();
+      console.log(jsoned);
+      navigate("../myorder");
+    } else if (respp.status === 400) {
+      console.log("cant again");
+      setError(true);
     }
   };
 

@@ -10,6 +10,7 @@ import { useGlobalContext } from "../context/AuthProvider";
 
 import TextField from "@mui/material/TextField";
 import { ReplayOutlined } from "@mui/icons-material";
+import AdminService from "../APIService/AdminService";
 const style = {
   position: "absolute",
   top: "50%",
@@ -38,31 +39,14 @@ export default function AddProduct() {
     console.log(ingredients);
     console.log(name);
     console.log(price);
-    try {
-      const respp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/AddProduct`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            Name: name,
-            Price: price,
-            Ingredients: ingredients,
-          }),
-        }
-      );
-      if (respp.ok) {
-        const jsoned = await respp.json();
-        handleClose();
-      }
-    } catch (err) {
-      console.log(err);
-    }
+
+    const jsoned = await AdminService.AddProduct({
+      Name: name,
+      Price: price,
+      Ingredients: ingredients,
+    });
+
+    handleClose();
   };
 
   return (

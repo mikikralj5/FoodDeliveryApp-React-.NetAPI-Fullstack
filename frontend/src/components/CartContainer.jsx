@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import ConsumerService from "../APIService/ConsumerService.js";
 const CartContainer = () => {
   const { cart, setCart, total, clearCart, auth } = useGlobalContext();
   const [comment, setComment] = React.useState("");
@@ -34,33 +35,16 @@ const CartContainer = () => {
       totalPrice: total + 5,
     });
     console.log(proba);
-    try {
-      const resp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/PlaceOrder`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            // name: "aa",
-            products: cart,
-            orderAddress: address,
-            comment: comment,
-            totalPrice: total + 5,
-          }),
-        }
-      );
 
-      const dataa = await resp.json();
-      console.log(dataa);
-      navigate("../dashboard");
-    } catch (err) {
-      console.log(err);
-    }
+    const dataa = await ConsumerService.PostOrder({
+      // name: "aa",
+      products: cart,
+      orderAddress: address,
+      comment: comment,
+      totalPrice: total + 5,
+    });
+
+    navigate("../dashboard");
   };
 
   return (

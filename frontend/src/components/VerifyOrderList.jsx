@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import VerifyOrderItem from "./VerifyOrderItem.jsx";
 import Loading from "./Loading";
 import Alert from "@mui/material/Alert";
+import DelivererService from "../APIService/DelivererService.js";
 
 const VerifyOrderList = () => {
   const { auth, loading, setLoading } = useGlobalContext();
@@ -16,36 +17,16 @@ const VerifyOrderList = () => {
   const [error, setError] = React.useState(false);
 
   const fetchOrders = async () => {
-    console.log("kurac");
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetPendingOrders`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-
-      if (data) {
-        setOrders(data);
-        console.log(orders);
-      } else {
-        setOrders([]);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+    const data = DelivererService.GetPendingOrders();
+    if (data) {
+      setOrders(data);
+      console.log(orders);
+    } else {
+      setOrders([]);
     }
+    setLoading(false);
   };
+
   useEffect(() => {
     fetchOrders();
   }, []);
