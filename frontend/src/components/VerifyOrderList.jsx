@@ -7,10 +7,13 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import VerifyOrderItem from "./VerifyOrderItem.jsx";
 import Loading from "./Loading";
+import Alert from "@mui/material/Alert";
+
 const VerifyOrderList = () => {
   const { auth, loading, setLoading } = useGlobalContext();
 
   const [orders, setOrders] = useState([]);
+  const [error, setError] = React.useState(false);
 
   const fetchOrders = async () => {
     console.log("kurac");
@@ -24,7 +27,7 @@ const VerifyOrderList = () => {
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -62,17 +65,24 @@ const VerifyOrderList = () => {
   }
 
   return (
-    <section className="cart">
-      <header>
-        <h2>pending orders</h2>
-      </header>
+    <div>
+      {error && (
+        <Alert severity="error">Cant accept more than one order !</Alert>
+      )}
+      <section className="cart">
+        <header>
+          <h2>pending orders</h2>
+        </header>
 
-      <div>
-        {orders.map((item) => {
-          return <VerifyOrderItem key={item.id} {...item} />;
-        })}
-      </div>
-    </section>
+        <div>
+          {orders.map((item) => {
+            return (
+              <VerifyOrderItem key={item.id} {...item} setError={setError} />
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 };
 

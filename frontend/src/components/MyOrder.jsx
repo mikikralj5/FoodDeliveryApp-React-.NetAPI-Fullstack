@@ -5,14 +5,41 @@ import { menuItemUnstyledClasses } from "@mui/base";
 import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import { useGlobalContext } from "../context/AuthProvider";
+import Loading from "../components/Loading";
 
 const MyOrder = () => {
-  const { auth } = useGlobalContext();
+  const { auth, loading, setLoading } = useGlobalContext();
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
-  const [order, setOrder] = useState(0);
+  const [order, setOrder] = useState({});
+  const [delivered, setDelivered] = useState(false);
+
+  const handleDelivered = async () => {
+    try {
+      const respp = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/FinishOrder/${order.id}`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+
+      //const jsoned = await respp.json();
+      console.log("poslao");
+      setDelivered(true);
+      console.log(delivered);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const fetchOrder = async () => {
+    setLoading(true);
     try {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetInProgressOrder`,
@@ -22,19 +49,29 @@ const MyOrder = () => {
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
       const data = await response.json();
-      console.log(data);
 
       if (data) {
-        setOrder(data);
+        console.log(data);
+        console.log("usao");
+        setOrder((order) => ({
+          ...order,
+          ...data,
+        }));
         console.log(order);
+        setLoading(false);
+      } else {
+        console.log("prazan");
+        setOrder({});
       }
     } catch (error) {
+      console.log("usao u error");
       console.log(error);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -44,73 +81,91 @@ const MyOrder = () => {
   var countDownDate = new Date(
     `Jun 22, 2022 ${order.deliveryTime}:00`
   ).getTime();
-  console.log(order.deliveryTime);
-  console.log(countDownDate);
-  console.log(new Date().getTime());
+  // console.log(order.deliveryTime);
+  // console.log(countDownDate);
+  //  console.log(new Date().getTime());
 
-  var x = setInterval(function () {
-    // Get today's date and time
+  var x = setInterval(async function () {
     let now = new Date().getTime();
 
-    // Find the distance between now and the count down date
     let distance = countDownDate - now;
 
-    // Time calculations for days, hours, minutes and seconds
-
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result in the element with id="demo"
+    let minutes = await Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = await Math.floor((distance % (1000 * 60)) / 1000);
     setSeconds(seconds);
     setMinutes(minutes);
-
-    // If the count down is finished, write some text
-    if (distance < 0) {
+    // console.log(distance);
+    if (seconds === 1) {
+      handleDelivered();
       clearInterval(x);
-      // document.getElementById("demo").innerHTML = "EXPIRED";
     }
   }, 1000);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!order.products) {
+    return (
+      <div>
+        <h2 className="section-title">No order to display</h2>
+      </div>
+    );
+  }
 
   return (
     <Grid sx={{ ml: 4, mr: 4, mt: 5 }} container spacing={2}>
       <Grid item xs="5">
-        <Typography variant="h3">Current order</Typography>
+        <Typography variant="h3">Products</Typography>
         <hr />
-        <Card sx={{ mt: 2, mb: 2, display: "flex" }} fullWidth>
-          <Box sx={{ width: "80%", display: "flex", flexDirection: "column" }}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                Burito
+        {order.products.map((item) => {
+          return (
+            <Card sx={{ mt: 2, mb: 2, display: "flex" }} fullWidth>
+              <Box
+                sx={{ width: "80%", display: "flex", flexDirection: "column" }}
+              >
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    {item.product.name}
+                  </Typography>
+                  <Typography variant="body2">
+                    Ingredients: {item.product.ingredients}
+                  </Typography>
+                </CardContent>
+              </Box>
+              <Typography
+                sx={{ mr: 5 }}
+                margin="auto"
+                align="center"
+                variant="h7"
+              >
+                Amount: {item.amount}
               </Typography>
-              <Typography variant="body2">
-                Sastojci: kecap, senf, kita
-              </Typography>
-            </CardContent>
-          </Box>
-          <Typography sx={{ mr: 5 }} margin="auto" align="center" variant="h7">
-            Amount: 2
-          </Typography>
-        </Card>
+            </Card>
+          );
+        })}
       </Grid>
       <Grid item xs="5">
         <Typography variant="h3">Order details</Typography>
         <hr />
 
         <Typography sx={{ mt: 3, mb: 10, ml: 2, mr: 2 }} variant="h3">
-          Time remaining : {minutes}:{seconds}
+          {delivered
+            ? "Your order has been delivered"
+            : `Time remaining : ${minutes}:${seconds}`}
         </Typography>
         <div>
           <Typography sx={{ mt: 4, mb: 4, ml: 2, mr: 2 }} variant="h5">
-            Address: Filipa Visnjica 17a
+            Order Address: {order.orderAddress}
           </Typography>
         </div>
         <div>
           <Typography sx={{ mt: 4, mb: 4, ml: 2, mr: 2 }} variant="h5">
-            Comment: Grale picketina jedna, nece nista da nauci.
+            Order Comment: {order.comment}
           </Typography>
           <div>
             <Typography sx={{ mt: 4, mb: 4, ml: 2, mr: 2 }} variant="h5">
-              Price: 31$.
+              Order Price: ${order.totalPrice}
             </Typography>
           </div>
         </div>
@@ -118,4 +173,5 @@ const MyOrder = () => {
     </Grid>
   );
 };
+
 export default MyOrder;

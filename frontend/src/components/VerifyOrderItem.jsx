@@ -4,6 +4,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+
 const VerifyOrderItem = ({
   id,
   totalPrice,
@@ -13,9 +14,12 @@ const VerifyOrderItem = ({
   deliveryTime,
   products,
   username,
+  error,
+  setError,
 }) => {
   const { auth } = useGlobalContext();
   const navigate = useNavigate();
+
   const handleClick = async () => {
     try {
       const respp = await fetch(
@@ -26,14 +30,17 @@ const VerifyOrderItem = ({
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
       if (respp.ok) {
         const jsoned = await respp.json();
         console.log(jsoned);
-        navigate("./myorder");
+        navigate("../myorder");
+      } else if (respp.status === 400) {
+        console.log("cant again");
+        setError(true);
       }
     } catch (err) {
       console.log(err);

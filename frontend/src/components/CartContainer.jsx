@@ -4,10 +4,12 @@ import { useGlobalContext } from "../context/AuthProvider";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 const CartContainer = () => {
   const { cart, setCart, total, clearCart, auth } = useGlobalContext();
   const [comment, setComment] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const navigate = useNavigate();
   /*if (cartItems.length === 0) {
     return (
       <section className="cart">
@@ -41,7 +43,7 @@ const CartContainer = () => {
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({
             // name: "aa",
@@ -55,7 +57,7 @@ const CartContainer = () => {
 
       const dataa = await resp.json();
       console.log(dataa);
-      // navigate('../login');
+      navigate("../dashboard");
     } catch (err) {
       console.log(err);
     }

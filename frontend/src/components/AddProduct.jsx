@@ -47,7 +47,7 @@ export default function AddProduct() {
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({
             Name: name,

@@ -9,18 +9,8 @@ import Loading from "./Loading";
 import UserItem from "./UserItem";
 const Users = () => {
   const { auth, loading, setLoading } = useGlobalContext();
-  /*if (cartItems.length === 0) {
-    return (
-      <section className="cart">
-        {/* cart header }
-        <header>
-          <h2>your bag</h2>
-          <h4 className="empty-cart">is currently empty</h4>
-        </header>
-      </section>
-    );
-  }*/
-  const [users, setUsers] = useEffect([]);
+
+  const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -33,7 +23,7 @@ const Users = () => {
             Accept: "application/json",
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -54,11 +44,21 @@ const Users = () => {
   };
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [JSON.stringify(users)]);
 
   if (loading) {
     return <Loading />;
   }
+  if (users.length === 0) {
+    return (
+      <section className="cart">
+        <header>
+          <h2>No pending users</h2>
+        </header>
+      </section>
+    );
+  }
+
   return (
     <section className="cart">
       <header>
@@ -67,7 +67,14 @@ const Users = () => {
 
       <div>
         {users.map((item) => {
-          return <UserItem key={item.id} {...item} />;
+          return (
+            <UserItem
+              key={item.id}
+              {...item}
+              setUsers={setUsers}
+              users={users}
+            />
+          );
         })}
       </div>
     </section>

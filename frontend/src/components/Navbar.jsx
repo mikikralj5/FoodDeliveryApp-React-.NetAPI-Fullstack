@@ -23,7 +23,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const pages = ["Register", "Login"];
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const { loggedIn, setAuth, auth, setLoggedIn, amount } = useGlobalContext();
+  const { setAuth, auth, amount } = useGlobalContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -59,7 +59,7 @@ const ResponsiveAppBar = () => {
 
       localStorage.clear();
 
-      setLoggedIn(false);
+      //setLoggedIn(false);
       console.log(localStorage.getItem("token"));
       console.log(auth);
       navigate("./login");
@@ -74,7 +74,7 @@ const ResponsiveAppBar = () => {
       navigate("./productList");
     }
     if (page === "Verify") {
-      navigate("./Users");
+      navigate("./users");
     }
     if (page === "VerifyOrder") {
       navigate("./verifyorderlist");
@@ -134,7 +134,7 @@ const ResponsiveAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {loggedIn ? (
+              {localStorage.getItem("loggedIn") ? (
                 <div>
                   <MenuItem
                     key="logout"
@@ -188,7 +188,7 @@ const ResponsiveAppBar = () => {
             }}
           ></Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {loggedIn ? (
+            {localStorage.getItem("loggedIn") ? (
               <Stack spacing={1} direction="row">
                 <Button
                   key="logout"

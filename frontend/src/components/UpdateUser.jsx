@@ -1,23 +1,23 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
 
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Add from '@mui/icons-material/Add';
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Add from "@mui/icons-material/Add";
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { InputLabel, MenuItem, FormControl, Select } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { ConnectingAirportsOutlined, ContactMail } from '@mui/icons-material';
-import { useGlobalContext } from '../context/AuthProvider';
-import httpClient from '../httpClient';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import { useState, useEffect } from "react";
+import { ConnectingAirportsOutlined, ContactMail } from "@mui/icons-material";
+import { useGlobalContext } from "../context/AuthProvider";
+import httpClient from "../httpClient";
 
 const theme = createTheme();
 
@@ -32,18 +32,18 @@ const UpdateUser = () => {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetUserProfile`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + auth.token,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + auth.token,
           },
         }
       );
 
       const string = await response.text();
-      const json = string === '' ? {} : JSON.parse(string);
+      const json = string === "" ? {} : JSON.parse(string);
       console.log(json);
       //  setName(json.name);
       // console.log(name);
@@ -88,11 +88,11 @@ const UpdateUser = () => {
       const resp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UpdateUserProfile`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({
             firstname: user.firstname,
@@ -119,9 +119,9 @@ const UpdateUser = () => {
           <Box
             sx={{
               marginTop: 5,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             <Avatar alt="Remy Sharp" src="/3.png" />
@@ -272,7 +272,7 @@ const UpdateUser = () => {
                 color="primary"
                 sx={{ mt: 1, mb: 1 }}
               >
-                {' '}
+                {" "}
                 <Add /> Upload a picture
                 <input type="file" name="picture" hidden />
               </Button>
