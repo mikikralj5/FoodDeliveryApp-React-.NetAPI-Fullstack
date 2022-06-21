@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 import UserItem from "./UserItem";
+import AdminService from "../APIService/AdminService.js";
 const Users = () => {
   const { auth, loading, setLoading } = useGlobalContext();
 
@@ -14,33 +15,15 @@ const Users = () => {
 
   const fetchUsers = async () => {
     setLoading(true);
-    try {
-      const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Admin/GetUnverifiedDeliverers`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
+    const data = await AdminService.GetUsers();
 
-      if (data) {
-        setUsers(data);
-        console.log(users);
-      } else {
-        setUsers([]);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+    if (data) {
+      setUsers(data);
+      console.log(users);
+    } else {
+      setUsers([]);
     }
+    setLoading(false);
   };
   useEffect(() => {
     fetchUsers();

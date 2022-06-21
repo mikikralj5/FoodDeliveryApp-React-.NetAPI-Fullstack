@@ -8,43 +8,27 @@ import AddProduct from "./AddProduct";
 import Loading from "./Loading";
 
 import Stack from "@mui/material/Stack";
+import ConsumerService from "../APIService/ConsumerService";
 export default function CocktailList() {
   const { auth, loading, setLoading } = useGlobalContext();
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     setLoading(true);
-    try {
-      const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetProducts`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + auth.token,
-          },
-        }
-      );
-      const data = await response.json();
-      console.log(data);
+    const data = await ConsumerService.GetProducts();
+    console.log(data);
 
-      if (data) {
-        setProducts(data);
-        console.log(products);
-      } else {
-        setProducts([]);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+    if (data) {
+      setProducts(data);
+      console.log(products);
+    } else {
+      setProducts([]);
     }
+    setLoading(false);
   };
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [JSON.stringify(products)]);
 
   if (loading) {
     return <Loading />;
@@ -54,7 +38,7 @@ export default function CocktailList() {
     return (
       <div>
         <h2 className="section-title">No products to display</h2>
-        <AddProduct></AddProduct>
+        <AddProduct setProducts={setProducts}></AddProduct>
       </div>
     );
   }
@@ -73,7 +57,7 @@ export default function CocktailList() {
       {products.map((item) => {
         return <ProductItem key={item.id} {...item} />;
       })}
-      <AddProduct></AddProduct>
+      <AddProduct setProducts={setProducts}></AddProduct>
     </Box>
   );
 }

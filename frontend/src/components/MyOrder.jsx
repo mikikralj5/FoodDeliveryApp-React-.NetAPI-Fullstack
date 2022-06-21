@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import { useGlobalContext } from "../context/AuthProvider";
 import Loading from "../components/Loading";
+import DelivererService from "../APIService/DelivererService";
 
 const MyOrder = () => {
   const { auth, loading, setLoading } = useGlobalContext();
@@ -15,63 +16,23 @@ const MyOrder = () => {
   const [delivered, setDelivered] = useState(false);
 
   const handleDelivered = async () => {
-    try {
-      const respp = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/FinishOrder/${order.id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-
-      //const jsoned = await respp.json();
-      console.log("poslao");
-      setDelivered(true);
-      console.log(delivered);
-    } catch (err) {
-      console.log(err);
-    }
+    const respp = await DelivererService.PostFinishedOrder(order.id);
+    setDelivered(true);
   };
 
   const fetchOrder = async () => {
     setLoading(true);
-    try {
-      const response = await fetch(
-        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetInProgressOrder`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      const data = await response.json();
+    const data = await DelivererService.GetMyOrder();
 
-      if (data) {
-        console.log(data);
-        console.log("usao");
-        setOrder((order) => ({
-          ...order,
-          ...data,
-        }));
-        console.log(order);
-        setLoading(false);
-      } else {
-        console.log("prazan");
-        setOrder({});
-      }
-    } catch (error) {
-      console.log("usao u error");
-      console.log(error);
+    if (data) {
+      setOrder((order) => ({
+        ...order,
+        ...data,
+      }));
+
       setLoading(false);
+    } else {
+      setOrder({});
     }
   };
   useEffect(() => {
@@ -81,9 +42,6 @@ const MyOrder = () => {
   var countDownDate = new Date(
     `Jun 22, 2022 ${order.deliveryTime}:00`
   ).getTime();
-  // console.log(order.deliveryTime);
-  // console.log(countDownDate);
-  //  console.log(new Date().getTime());
 
   var x = setInterval(async function () {
     let now = new Date().getTime();
@@ -94,8 +52,8 @@ const MyOrder = () => {
     let seconds = await Math.floor((distance % (1000 * 60)) / 1000);
     setSeconds(seconds);
     setMinutes(minutes);
-    // console.log(distance);
-    if (seconds === 1) {
+
+    if (minutes === 0 && seconds === 1) {
       handleDelivered();
       clearInterval(x);
     }
