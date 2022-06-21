@@ -54,8 +54,20 @@ namespace FoodDeliveryAPI.Controllers
             Random rnd = new Random();
             string dt = DateTime.Now.ToString("H:mm");
             string[] dtArr = dt.Split(":");
-            int dtMinNum = Int32.Parse(dtArr[1]) + rnd.Next(1, 3);
-            order.DeliveryTime = dtArr[0] + ":" + dtMinNum.ToString();
+            int dtMinNum = Int32.Parse(dtArr[1]) + rnd.Next(2, 4);
+            if(dtMinNum < 10)
+            {
+                order.DeliveryTime = dtArr[0] + ":"+"0"+dtMinNum;
+            }
+            else if(dtMinNum >= 60)
+            {
+                order.DeliveryTime = (Int32.Parse(dtArr[0]) + 1).ToString() + ":03";
+            }
+            else
+            {
+                order.DeliveryTime = dtArr[0] + ":" + dtMinNum;
+            }
+           
             order.OrderState = "IN_PROGRESS";
           
            

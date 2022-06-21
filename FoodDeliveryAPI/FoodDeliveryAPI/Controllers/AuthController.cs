@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using FoodDeliveryAPI.DTOs;
+using FoodDeliveryAPI.DTOs.User;
 using FoodDeliveryAPI.Helpers;
 using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -24,22 +27,26 @@ namespace FoodDeliveryAPI.Controllers
         private readonly IUserRepository _userRepository;
         private readonly JwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
 
-        public AuthController(IUserRepository userRepository, JwtService jwtService, IMapper mapper)
+        public AuthController(IUserRepository userRepository, JwtService jwtService, IMapper mapper, IWebHostEnvironment hostingEnvironment)
         {
             _userRepository = userRepository;
             _jwtService = jwtService;
             _mapper = mapper;
+            _hostingEnvironment = hostingEnvironment;
         }
 
 
         [HttpPost]
         [Route("Register")]
-        [Consumes("application/json")]
+        //[Consumes("application/json")]
         //[Produces("application/json")]
         public IActionResult RegisterUser([FromBody] RegisterDto dtoUser)
         {
+            //var file = HttpContext.Request.Form.Files;
+
             if (_userRepository.UserExists(dtoUser.Username))
             {
 
@@ -49,7 +56,9 @@ namespace FoodDeliveryAPI.Controllers
             
             User newUser = _mapper.Map<User>(dtoUser);
 
-            if(newUser.Role == "DELIVERER")
+           
+
+            if (newUser.Role == "DELIVERER")
             {
                 newUser.Verified = "PENDING";
             }
@@ -68,8 +77,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
-       
+        [Route("Login")]       
         public IActionResult Login([FromBody] LoginDto userLogin)
         {
             
@@ -93,6 +101,32 @@ namespace FoodDeliveryAPI.Controllers
             });
 
             return Ok(token); ;
+        }
+
+
+        [HttpPost]
+        [Route("UploadImage")]
+        public IActionResult UploadImage([FromForm] UserImageDto userImageDto)
+        {
+
+            var file = Request.Form.Files[0];
+
+            string folderName = "Images";
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            string path = Path.Combine(folderPath, file.FileName);
+
+            using (FileStream fs = System.IO.File.Create(path))
+            {
+                file.CopyTo(fs);
+                
+            }
+
+            //Byte[] b = System.IO.File.ReadAllBytes(path);
+            return Ok(PhysicalFile(path, "image/jpeg"));
+
+            
+
+
         }
 
         [HttpGet("GetUserProfile")]
