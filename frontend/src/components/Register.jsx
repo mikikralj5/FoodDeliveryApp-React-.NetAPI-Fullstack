@@ -13,7 +13,13 @@ import Container from "@mui/material/Container";
 import Add from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import {
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  avatarGroupClasses,
+} from "@mui/material";
 import { useState } from "react";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
@@ -23,6 +29,7 @@ const theme = createTheme();
 
 const Register = () => {
   const [file, setFile] = useState(null);
+  const [imgUrl, setImgUrl] = useState("");
 
   const fileSelectedHandler = (event) => {
     setFile(event.target.files[0]);
@@ -33,26 +40,13 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // const data = new FormData();
-    // data.append("UserImage", file);
+    const imgData = new FormData();
+    imgData.append("UserImage", file);
+    imgData.append("Username", data.get("username"));
 
-    // const resp = await fetch(
-    //   `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UploadImage`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       Accept: "application/json",
-    //       //"Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*",
-    //     },
-    //     body: data,
-    //   }
-    // );
-
-    // console.log(resp);
-    // const dataa = await resp.json();
-    // console.log(file);
-    // console.log(dataa);
+    // const data = await response.blob();
+    // const imgUrlTemp = URL.createObjectURL(data);
+    // setImgUrl(imgUrlTemp);
 
     try {
       const resp = await fetch(
@@ -78,11 +72,24 @@ const Register = () => {
       );
 
       //const dataa = await resp.json();
-
-      navigate("../login");
     } catch (err) {
       console.log(err);
     }
+
+    const resp = await fetch(
+      `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UploadImage`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          //"Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: imgData,
+      }
+    );
+
+    navigate("../login");
   };
 
   return (

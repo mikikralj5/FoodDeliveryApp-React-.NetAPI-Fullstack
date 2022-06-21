@@ -121,13 +121,35 @@ namespace FoodDeliveryAPI.Controllers
                 
             }
 
-            //Byte[] b = System.IO.File.ReadAllBytes(path);
-            return Ok(PhysicalFile(path, "image/jpeg"));
+            User user = _userRepository.GetByUsername(userImageDto.Username);
+            user.Picture = file.FileName;
+            _userRepository.UpdateUser(user);
 
-            
+            return Ok("User created");
+
+
 
 
         }
+
+        [HttpGet]
+        [Route("GetImg")]
+        public IActionResult GetImg([FromForm] UserImageDto userImageDto)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userClaims = identity.Claims;
+            string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(username);
+
+            string folderName = "Images";
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            string path = Path.Combine(folderPath, user.Picture);
+
+                     
+            var image = System.IO.File.OpenRead(path);
+            return File(image, "image/jpeg");
+    }
 
         [HttpGet("GetUserProfile")]
         //[Authorize(Roles = "DELIVERER")]

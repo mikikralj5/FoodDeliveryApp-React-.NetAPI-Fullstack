@@ -34,7 +34,7 @@ namespace FoodDeliveryAPI.Models
         public string Address { get; set; }
         public string Date { get; set; }
         public string Role { get; set; }
-        public byte[] Picture { get; set; }
+        public string Picture { get; set; }
         private List<Order> consumerOrders;
         private List<Order> delivererOrders;
         public string Verified { get; set; }

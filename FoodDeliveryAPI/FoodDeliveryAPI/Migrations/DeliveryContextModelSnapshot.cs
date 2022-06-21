@@ -33,8 +33,8 @@ namespace FoodDeliveryAPI.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DeliveryTime")
-                        .HasColumnType("int");
+                    b.Property<string>("DeliveryTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderAddress")
                         .HasColumnType("nvarchar(max)");
@@ -131,8 +131,8 @@ namespace FoodDeliveryAPI.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Picture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Picture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");

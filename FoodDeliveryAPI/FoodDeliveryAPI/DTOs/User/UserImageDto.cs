@@ -5,7 +5,8 @@ namespace FoodDeliveryAPI.DTOs.User
 {
 	public class UserImageDto
 	{
-		IFormFile UserImage { get; set; }
+		public IFormFile UserImage { get; set; }
+		public string Username { get; set; }
 
 		public UserImageDto()
 		{
