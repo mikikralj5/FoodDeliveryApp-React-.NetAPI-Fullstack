@@ -24,7 +24,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const pages = ["Register", "Login"];
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const { amount } = useGlobalContext();
+  const { amount, clearCart } = useGlobalContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -107,6 +107,7 @@ const ResponsiveAppBar = () => {
                           onClick={() => {
                             console.log("usao select");
                             if (item.title === "Logout") {
+                              clearCart();
                               localStorage.clear();
                             }
                             navigate(item.redirectUrl);
@@ -166,6 +167,7 @@ const ResponsiveAppBar = () => {
                         key={item.title}
                         onClick={() => {
                           if (item.title === "Logout") {
+                            clearCart();
                             localStorage.clear();
                           }
                           navigate(item.redirectUrl);

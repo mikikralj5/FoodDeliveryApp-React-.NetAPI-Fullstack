@@ -43,7 +43,7 @@ const CartContainer = () => {
       comment: comment,
       totalPrice: total + 5,
     });
-
+    clearCart();
     navigate("../dashboard");
   };
 
