@@ -3,8 +3,11 @@ import { useGlobalContext } from "../context/AuthProvider";
 import DoneIcon from "@mui/icons-material/Done";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 import AdminService from "../APIService/AdminService";
-const UserItem = ({ username, setUsers, users }) => {
+import emailjs from "@emailjs/browser";
+
+const UserItem = ({ username, setUsers, users, email }) => {
   const handleClick = async (action) => {
+    console.log(action);
     const respp = await AdminService.PostUser({
       username: username,
       state: action,
@@ -20,6 +23,25 @@ const UserItem = ({ username, setUsers, users }) => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    emailjs
+      .sendForm(
+        "service_epiwf4s",
+        "template_wq9ux0c",
+        e.target,
+        "38XQ2UXCry6qGRKU1"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
+
   return (
     <article className="cart-item">
       <img src={"/6.png"} />
@@ -27,12 +49,24 @@ const UserItem = ({ username, setUsers, users }) => {
         <h4>{username}</h4>
       </div>
       <div>
-        <button onClick={() => handleClick("CONFIRMED")}>
+        {/* <button onClick={() => handleClick("CONFIRMED")}>
           <DoneIcon></DoneIcon>
         </button>
         <button onClick={() => handleClick("DECLINED")}>
           <DoNotDisturbIcon></DoNotDisturbIcon>
-        </button>
+        </button> */}
+        <form onSubmit={handleSubmit}>
+          <input type="hidden" value={email} name="toEmail" />
+          <button type="submit" onClick={() => handleClick("CONFIRMED")}>
+            <DoneIcon></DoneIcon>
+          </button>
+        </form>
+        <form onSubmit={handleSubmit}>
+          <input type="hidden" value={email} name="toEmail" />
+          <button type="submit" onClick={() => handleClick("DECLINED")}>
+            <DoNotDisturbIcon></DoNotDisturbIcon>
+          </button>
+        </form>
       </div>
     </article>
   );
