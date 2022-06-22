@@ -18,12 +18,13 @@ import { useGlobalContext } from "../context/AuthProvider";
 import { Co2Sharp } from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Stack from "@mui/material/Stack";
+import navbarItems from "../data/navbarItems";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const pages = ["Register", "Login"];
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const { setAuth, auth, amount } = useGlobalContext();
+  const { amount } = useGlobalContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -41,47 +42,6 @@ const ResponsiveAppBar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const handleClickBtn = (page) => {
-    if (page === "Register") {
-      navigate("./register");
-    }
-    if (page === "Login") {
-      navigate("./login");
-    }
-    if (page === "Logout") {
-      setAuth({
-        username: undefined,
-        password: undefined,
-        token: undefined,
-      });
-
-      localStorage.clear();
-
-      //setLoggedIn(false);
-      console.log(localStorage.getItem("token"));
-      console.log(auth);
-      navigate("./login");
-    }
-    if (page === "Cart") {
-      navigate("./cart");
-    }
-    if (page === "Dashboard") {
-      navigate("./dashboard");
-    }
-    if (page === "Products") {
-      navigate("./productList");
-    }
-    if (page === "Verify") {
-      navigate("./users");
-    }
-    if (page === "VerifyOrder") {
-      navigate("./verifyorderlist");
-    }
-    if (page === "MyOrder") {
-      navigate("./myorder");
-    }
   };
 
   return (
@@ -136,35 +96,40 @@ const ResponsiveAppBar = () => {
             >
               {localStorage.getItem("loggedIn") ? (
                 <div>
-                  <MenuItem
-                    key="logout"
-                    onClick={() => handleClickBtn("Logout")}
-                  >
-                    <Typography textAlign="center">Logout</Typography>
-                  </MenuItem>
-
-                  <div className="nav-container"></div>
-                  <MenuItem key="cart" onClick={() => handleClickBtn("Cart")}>
-                    <ShoppingCartIcon
-                      sx={{ fontSize: 40, color: "white" }}
-                    ></ShoppingCartIcon>
-                    <div className="amount-container">
-                      <p color="white" className="total-amount">
-                        {amount}
-                      </p>
-                    </div>
-                  </MenuItem>
+                  {navbarItems.map((item) => {
+                    if (
+                      item.role.find(
+                        (role) => role === localStorage.getItem("role")
+                      )
+                    ) {
+                      return (
+                        <MenuItem
+                          onClick={() => {
+                            console.log("usao select");
+                            if (item.title === "Logout") {
+                              localStorage.clear();
+                            }
+                            navigate(item.redirectUrl);
+                          }}
+                        >
+                          <Typography textAlign="center">
+                            {item.title}
+                          </Typography>
+                        </MenuItem>
+                      );
+                    }
+                  })}
                 </div>
               ) : (
                 <div>
+                  <MenuItem key="login" onClick={() => navigate("./login")}>
+                    <Typography textAlign="center">Login</Typography>
+                  </MenuItem>
                   <MenuItem
                     key="register"
-                    onClick={() => handleClickBtn("register")}
+                    onClick={() => navigate("./register")}
                   >
                     <Typography textAlign="center">Register</Typography>
-                  </MenuItem>
-                  <MenuItem key="login" onClick={() => handleClickBtn("login")}>
-                    <Typography textAlign="center">Login</Typography>
                   </MenuItem>
                 </div>
               )}
@@ -190,68 +155,41 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {localStorage.getItem("loggedIn") ? (
               <Stack spacing={1} direction="row">
-                <Button
-                  key="logout"
-                  onClick={() => handleClickBtn("Logout")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Logout
-                </Button>
-                <MenuItem key="cart">
-                  <Button onClick={() => handleClickBtn("Cart")}>
-                    <ShoppingCartIcon
-                      sx={{ fontSize: 40, color: "white" }}
-                    ></ShoppingCartIcon>
-                  </Button>
-                </MenuItem>
-                <Button
-                  key="dashboard"
-                  onClick={() => handleClickBtn("Dashboard")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Dashboard
-                </Button>
-                <Button
-                  key="produts"
-                  onClick={() => handleClickBtn("Products")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Products
-                </Button>
-                <Button
-                  key="verify"
-                  onClick={() => handleClickBtn("Verify")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Verify Users
-                </Button>
-                <Button
-                  key="verifyo"
-                  onClick={() => handleClickBtn("VerifyOrder")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  Verify Order
-                </Button>
-                <Button
-                  key="myorder"
-                  onClick={() => handleClickBtn("MyOrder")}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  My order
-                </Button>
+                {navbarItems.map((item) => {
+                  if (
+                    item.role.find(
+                      (role) => role === localStorage.getItem("role")
+                    )
+                  ) {
+                    return (
+                      <Button
+                        key={item.title}
+                        onClick={() => {
+                          if (item.title === "Logout") {
+                            localStorage.clear();
+                          }
+                          navigate(item.redirectUrl);
+                        }}
+                        sx={{ my: 2, color: "white", display: "block" }}
+                      >
+                        {item.title}
+                      </Button>
+                    );
+                  }
+                })}
               </Stack>
             ) : (
               <Stack spacing={1} direction="row">
                 <Button
                   key="login"
-                  onClick={() => handleClickBtn("Login")}
+                  onClick={() => navigate("./login")}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Login
                 </Button>
                 <Button
                   key="register"
-                  onClick={() => handleClickBtn("Register")}
+                  onClick={() => navigate("./register")}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Register

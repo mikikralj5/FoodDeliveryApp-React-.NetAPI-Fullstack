@@ -30,7 +30,7 @@ export default function AddProduct() {
     setOpen(false);
     window.location.reload();
   };
-  const { chosenProducts, setChosenProducts, auth } = useGlobalContext();
+  const { chosenProducts, setChosenProducts } = useGlobalContext();
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
 

@@ -17,19 +17,11 @@ import UserItem from "./components/UserItem";
 import VerifyOrderItem from "./components/VerifyOrderItem";
 import VerifyOrderList from "./components/VerifyOrderList";
 import MyOrder from "./components/MyOrder";
+import RequireAuth from "./context/RequireAuth";
+import Unathorized from "./components/Unauthorized";
 
 function App() {
   const [test, setTest] = useState([]);
-
-  // useEffect(() => {
-  //   getTest();
-  // }, []);
-
-  // const getTest = async () => {
-  //   const resp = await fetch("https://localhost:5001/api/Register");
-  //   const data = await resp.json();
-  //   console.log(data);
-  // };
 
   return (
     <Router>
@@ -40,26 +32,37 @@ function App() {
 
           <Route path="/login" element={<Login />} />
 
-          <Route path="/dashboard" element={<CardItem />} />
+          <Route element={<RequireAuth allowedRoles={["CONSUMER"]} />}>
+            <Route path="/cart" element={<CartContainer />} />
+          </Route>
 
-          <Route path="/update" element={<UpdateUser />} />
+          <Route element={<RequireAuth allowedRoles={["DELIVERER"]} />}>
+            <Route path="/verifyorderitem" element={<VerifyOrderItem />} />
 
-          <Route path="/productItem" element={<ProductItem />} />
+            <Route path="/verifyorderlist" element={<VerifyOrderList />} />
+            <Route path="/myorder" element={<MyOrder />} />
+          </Route>
+          <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
+            <Route path="/users" element={<Users />} />
 
-          <Route path="/productList" element={<ProductList />} />
+            <Route path="/userItem" element={<UserItem />} />
+            <Route path="/addProduct" element={<AddProduct />} />
+          </Route>
+          <Route
+            element={
+              <RequireAuth allowedRoles={["ADMIN", "CONSUMER", "DELIVERER"]} />
+            }
+          >
+            <Route path="/dashboard" element={<CardItem />} />
 
-          <Route path="/addProduct" element={<AddProduct />} />
+            <Route path="/update" element={<UpdateUser />} />
 
-          <Route path="/cart" element={<CartContainer />} />
+            <Route path="/productItem" element={<ProductItem />} />
 
-          <Route path="/users" element={<Users />} />
+            <Route path="/productList" element={<ProductList />} />
 
-          <Route path="/userItem" element={<UserItem />} />
-
-          <Route path="/verifyorderitem" element={<VerifyOrderItem />} />
-
-          <Route path="/verifyorderlist" element={<VerifyOrderList />} />
-          <Route path="/myorder" element={<MyOrder />} />
+            <Route path="/unauthorized" element={<Unathorized />} />
+          </Route>
         </Routes>
       </div>
     </Router>

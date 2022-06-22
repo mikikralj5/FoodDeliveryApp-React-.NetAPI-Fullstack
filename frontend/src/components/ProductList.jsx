@@ -10,7 +10,7 @@ import Loading from "./Loading";
 import Stack from "@mui/material/Stack";
 import ConsumerService from "../APIService/ConsumerService";
 export default function CocktailList() {
-  const { auth, loading, setLoading } = useGlobalContext();
+  const { loading, setLoading } = useGlobalContext();
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {

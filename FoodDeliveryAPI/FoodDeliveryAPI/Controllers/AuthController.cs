@@ -99,8 +99,8 @@ namespace FoodDeliveryAPI.Controllers
             {
                 HttpOnly = true
             });
-
-            return Ok(token); ;
+             
+            return Ok(new {token=token , role=userTemp.Role}); ;
         }
 
 

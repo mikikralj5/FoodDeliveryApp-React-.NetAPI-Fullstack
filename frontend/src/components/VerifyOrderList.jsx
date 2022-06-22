@@ -11,13 +11,13 @@ import Alert from "@mui/material/Alert";
 import DelivererService from "../APIService/DelivererService.js";
 
 const VerifyOrderList = () => {
-  const { auth, loading, setLoading } = useGlobalContext();
+  const { loading, setLoading } = useGlobalContext();
 
   const [orders, setOrders] = useState([]);
   const [error, setError] = React.useState(false);
 
   const fetchOrders = async () => {
-    const data = DelivererService.GetPendingOrders();
+    const data = await DelivererService.GetPendingOrders();
     if (data) {
       setOrders(data);
       console.log(orders);

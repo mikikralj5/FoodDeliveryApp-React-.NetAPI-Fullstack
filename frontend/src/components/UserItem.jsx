@@ -4,8 +4,6 @@ import DoneIcon from "@mui/icons-material/Done";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 import AdminService from "../APIService/AdminService";
 const UserItem = ({ username, setUsers, users }) => {
-  const { auth } = useGlobalContext();
-
   const handleClick = async (action) => {
     const respp = await AdminService.PostUser({
       username: username,

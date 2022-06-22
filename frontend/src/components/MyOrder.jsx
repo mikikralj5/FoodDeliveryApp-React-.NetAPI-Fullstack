@@ -9,7 +9,7 @@ import Loading from "../components/Loading";
 import DelivererService from "../APIService/DelivererService";
 
 const MyOrder = () => {
-  const { auth, loading, setLoading } = useGlobalContext();
+  const { loading, setLoading } = useGlobalContext();
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [order, setOrder] = useState({});

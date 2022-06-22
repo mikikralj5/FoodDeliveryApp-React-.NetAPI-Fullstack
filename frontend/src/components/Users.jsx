@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import UserItem from "./UserItem";
 import AdminService from "../APIService/AdminService.js";
 const Users = () => {
-  const { auth, loading, setLoading } = useGlobalContext();
+  const { loading, setLoading } = useGlobalContext();
 
   const [users, setUsers] = useState([]);
 

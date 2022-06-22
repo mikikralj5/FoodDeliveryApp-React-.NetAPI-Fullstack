@@ -25,7 +25,6 @@ const theme = createTheme();
 const UpdateUser = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const { setAuth, setLoggedIn, auth, loggedIn } = useGlobalContext();
 
   const getUser = async () => {
     setLoading(true);

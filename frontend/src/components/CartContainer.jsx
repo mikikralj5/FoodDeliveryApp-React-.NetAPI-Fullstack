@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ConsumerService from "../APIService/ConsumerService.js";
 const CartContainer = () => {
-  const { cart, setCart, total, clearCart, auth } = useGlobalContext();
+  const { cart, setCart, total, clearCart } = useGlobalContext();
   const [comment, setComment] = React.useState("");
   const [address, setAddress] = React.useState("");
   const navigate = useNavigate();

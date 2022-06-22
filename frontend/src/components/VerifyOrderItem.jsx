@@ -18,7 +18,6 @@ const VerifyOrderItem = ({
   error,
   setError,
 }) => {
-  const { auth } = useGlobalContext();
   const navigate = useNavigate();
 
   const handleClick = async () => {

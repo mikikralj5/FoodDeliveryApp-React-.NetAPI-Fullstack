@@ -16,7 +16,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import { useState, useContext } from "react";
 import { ConnectingAirportsOutlined } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import httpClient from "../httpClient";
 import { useGlobalContext } from "../context/AuthProvider";
 import Alert from "@mui/material/Alert";
@@ -24,8 +24,9 @@ import ConsumerService from "../APIService/ConsumerService";
 const theme = createTheme();
 
 const Login = () => {
-  const { setAuth, auth } = useGlobalContext();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
   const [error, setError] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
 
@@ -42,17 +43,11 @@ const Login = () => {
       const jsoned = await respp.json();
       if (respp.ok) {
         setLoggedIn(true);
-        localStorage.setItem("token", jsoned);
+        localStorage.setItem("token", jsoned.token);
+        localStorage.setItem("role", jsoned.role);
         localStorage.setItem("loggedIn", true);
+
         const token = jsoned;
-        setAuth({
-          username: data.get("username"),
-          password: data.get("password"),
-          token: token,
-        });
-        // setLoggedIn(true);
-        //  console.log(auth.username);
-        //   console.log(loggedIn);
 
         navigate("../dashboard");
       } else if (respp.status === 401) {
