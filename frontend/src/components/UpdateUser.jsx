@@ -56,6 +56,14 @@ const UpdateUser = () => {
       address: user.address,
       username: user.username,
     });
+
+    console.log({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      address: user.address,
+      username: user.username,
+    });
   };
 
   return (
@@ -228,7 +236,7 @@ const UpdateUser = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 1, mb: 1 }}
-                onClick={() => handleSubmit()}
+                // onClick={() => handleSubmit()}
               >
                 Update User
               </Button>

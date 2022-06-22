@@ -45,6 +45,27 @@ export default class ConsumerService {
     }
   }
 
+  static async LogInUserFb(body) {
+    try {
+      const respp = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/LoginWithFb`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      return respp;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   static async UpdateUserPut(body) {
     try {
       const resp = await fetch(
@@ -134,6 +155,27 @@ export default class ConsumerService {
         }
       );
       const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async GetUserImage() {
+    try {
+      const response = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetImg`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const data = await response.blob();
       return data;
     } catch (error) {
       console.log(error);

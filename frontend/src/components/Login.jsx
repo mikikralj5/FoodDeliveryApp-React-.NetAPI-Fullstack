@@ -21,6 +21,7 @@ import httpClient from "../httpClient";
 import { useGlobalContext } from "../context/AuthProvider";
 import Alert from "@mui/material/Alert";
 import ConsumerService from "../APIService/ConsumerService";
+import FacebookLogin from "react-facebook-login";
 const theme = createTheme();
 
 const Login = () => {
@@ -29,6 +30,24 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/dashboard";
   const [error, setError] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
+
+  const responseFacebook = async (resp) => {
+    const respp = await ConsumerService.LogInUserFb({
+      name: resp.name,
+      email: resp.email,
+    });
+    const jsoned = await respp.json();
+    if (respp.ok) {
+      localStorage.setItem("token", jsoned);
+      localStorage.setItem("loggedIn", true);
+      localStorage.setItem("image", resp.picture.data.url);
+      navigate("/update");
+    }
+  };
+
+  const componentClicked = (data) => {
+    console.log(data);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,6 +67,9 @@ const Login = () => {
         localStorage.setItem("loggedIn", true);
 
         const token = jsoned;
+
+        const userImgBlob = await ConsumerService.GetUserImage();
+        localStorage.setItem("image", URL.createObjectURL(userImgBlob));
 
         navigate("../dashboard");
       } else if (respp.status === 401) {
@@ -110,15 +132,24 @@ const Login = () => {
                   type={"password"}
                 />
               </Grid>
+              <Box sx={{ mt: 3, mb: 1 }}>
+                <Button type="submit" fullWidth variant="contained">
+                  Sign in
+                </Button>
+                <Button fullWidth>
+                  {" "}
+                  <FacebookLogin
+                    cssClass="fb-btn"
+                    appId="785808059074600"
+                    autoLoad={true}
+                    fields="name,email,picture"
+                    onClick={componentClicked}
+                    callback={responseFacebook}
+                    icon={<i className="fa fa-facebook" />}
+                  />
+                </Button>
+              </Box>
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 1 }}
-              >
-                Sign in
-              </Button>
               <Grid container justifyContent="center">
                 <Grid item>
                   <Link href="/register" variant="body2">

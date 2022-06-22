@@ -58,13 +58,13 @@ namespace FoodDeliveryAPI.Controllers
 
            
 
-            if (newUser.Role == "DELIVERER")
+            if (newUser.Role == UserType.DELIVERER.ToString())
             {
-                newUser.Verified = "PENDING";
+                newUser.Verified = UserState.PENDING.ToString();
             }
             else
             {
-                newUser.Verified = "CONFIRMED";
+                newUser.Verified = UserState.CONFIRMED.ToString();
             }
 
             newUser.DelivererOrders = new List<Order>();
@@ -72,9 +72,34 @@ namespace FoodDeliveryAPI.Controllers
 
              _userRepository.AddUser(newUser);
 
-            return Ok(new { mess = "napravljen" });
+            return Ok("napravljen");
 
         }
+
+        
+        [HttpPost("LoginWithFb")]
+        public IActionResult LoginWithFb(FbLoginDto fbLoginDto)
+        {
+            User u = new User();
+            u.Username = fbLoginDto.Name;
+            u.Email = fbLoginDto.Email;
+            u.Role = UserType.CONSUMER.ToString();
+            u.Verified = UserState.CONFIRMED.ToString();
+            u.DelivererOrders = new List<Order>();
+            u.ConsumerOrders = new List<Order>();
+
+            _userRepository.AddUser(u);
+
+            var token = _jwtService.GenerateToken(u);
+
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true
+            });
+
+            return Ok(token); 
+        }
+
 
         [HttpPost]
         [Route("Login")]       
