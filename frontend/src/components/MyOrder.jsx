@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import { Card, CardMedia, Stack, Typography } from "@mui/material";
-import { menuItemUnstyledClasses } from "@mui/base";
-import Grid from "@mui/material/Grid";
-import CardContent from "@mui/material/CardContent";
-import { useGlobalContext } from "../context/AuthProvider";
-import Loading from "../components/Loading";
-import DelivererService from "../APIService/DelivererService";
+import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import { Card, CardMedia, Stack, Typography } from '@mui/material';
+import { menuItemUnstyledClasses } from '@mui/base';
+import Grid from '@mui/material/Grid';
+import CardContent from '@mui/material/CardContent';
+import { useGlobalContext } from '../context/AuthProvider';
+import Loading from '../components/Loading';
+import DelivererService from '../APIService/DelivererService';
+import ConsumerService from '../APIService/ConsumerService';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MyOrder = () => {
   const { loading, setLoading } = useGlobalContext();
@@ -14,6 +16,8 @@ const MyOrder = () => {
   const [minutes, setMinutes] = useState(0);
   const [order, setOrder] = useState({});
   const [delivered, setDelivered] = useState(false);
+  const location = useLocation();
+  const id = location.state?.id;
 
   const handleDelivered = async () => {
     const respp = await DelivererService.PostFinishedOrder(order.id);
@@ -35,8 +39,27 @@ const MyOrder = () => {
       setOrder({});
     }
   };
+
+  const fetchConsumerOrder = async () => {
+    setLoading(true);
+    const data = await ConsumerService.GetConsumerOrder(id);
+
+    if (data) {
+      setOrder((order) => ({
+        ...order,
+        ...data,
+      }));
+
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchOrder();
+    if (localStorage.getItem('role') === 'DELIVERER') {
+      fetchOrder();
+    } else if (localStorage.getItem('role') === 'CONSUMER') {
+      fetchConsumerOrder();
+    }
   }, []);
 
   var countDownDate = new Date(
@@ -50,10 +73,10 @@ const MyOrder = () => {
 
     let minutes = await Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = await Math.floor((distance % (1000 * 60)) / 1000);
-    setSeconds(seconds);
-    setMinutes(minutes);
+    await setSeconds(seconds);
+    await setMinutes(minutes);
 
-    if (minutes === 0 && seconds === 1) {
+    if (minutes <= 0 && seconds <= 1 && Object.keys(order).length !== 0) {
       handleDelivered();
       clearInterval(x);
     }
@@ -63,7 +86,8 @@ const MyOrder = () => {
     return <Loading />;
   }
 
-  if (!order.products) {
+  if (Object.keys(order).length === 0) {
+    console.log('nema ih');
     return (
       <div>
         <h2 className="section-title">No order to display</h2>
@@ -78,9 +102,9 @@ const MyOrder = () => {
         <hr />
         {order.products.map((item) => {
           return (
-            <Card sx={{ mt: 2, mb: 2, display: "flex" }} fullWidth>
+            <Card sx={{ mt: 2, mb: 2, display: 'flex' }} fullWidth>
               <Box
-                sx={{ width: "80%", display: "flex", flexDirection: "column" }}
+                sx={{ width: '80%', display: 'flex', flexDirection: 'column' }}
               >
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
@@ -109,7 +133,7 @@ const MyOrder = () => {
 
         <Typography sx={{ mt: 3, mb: 10, ml: 2, mr: 2 }} variant="h3">
           {delivered
-            ? "Your order has been delivered"
+            ? 'Your order has been delivered'
             : `Time remaining : ${minutes}:${seconds}`}
         </Typography>
         <div>

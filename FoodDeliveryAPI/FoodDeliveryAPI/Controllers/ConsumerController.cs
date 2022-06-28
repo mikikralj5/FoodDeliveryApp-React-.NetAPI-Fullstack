@@ -107,6 +107,12 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(user.DelivererOrders);
         }
 
+        [HttpGet("GetOrderById/{id}")]
+        public IActionResult GetOrderById(string id)
+        {                
+            return Ok(_orderRepository.GetById(Int32.Parse(id)));
+        }
+
 
     }
 }
