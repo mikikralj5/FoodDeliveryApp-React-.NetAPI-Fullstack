@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FoodDeliveryAPI.Models;
 using System.Collections.Generic;
-using FoodDeliveryAPI.Models;
 
 namespace FoodDeliveryAPI.Repository
 {
-	public interface IOrderRepository
+    public interface IOrderRepository
 	{
 
 
