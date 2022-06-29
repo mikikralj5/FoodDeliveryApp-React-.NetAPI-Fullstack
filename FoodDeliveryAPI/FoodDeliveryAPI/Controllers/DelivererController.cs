@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using FoodDeliveryAPI.DTOs.Order;
 using FoodDeliveryAPI.Models;
@@ -18,11 +19,13 @@ namespace FoodDeliveryAPI.Controllers
         
         private readonly IOrderRepository _orderRepository;
         private readonly IUserRepository _userRepository;
+        private readonly DeliveryContext _context;
 
-        public DelivererController(IOrderRepository orderRepository, IUserRepository userRepository)
+        public DelivererController(IOrderRepository orderRepository, IUserRepository userRepository, DeliveryContext deliveryContext)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
+            _context = deliveryContext;
         }
 
         [HttpGet("GetPendingOrders")]
@@ -54,7 +57,8 @@ namespace FoodDeliveryAPI.Controllers
             Random rnd = new Random();
             string dt = DateTime.Now.ToString("H:mm");
             string[] dtArr = dt.Split(":");
-            int dtMinNum = Int32.Parse(dtArr[1]) + rnd.Next(2, 4);
+            int deliveryTime = rnd.Next(2, 4);
+            int dtMinNum = Int32.Parse(dtArr[1]) + deliveryTime;
             if(dtMinNum < 10)
             {
                 order.DeliveryTime = dtArr[0] + ":"+"0"+dtMinNum;
@@ -69,11 +73,13 @@ namespace FoodDeliveryAPI.Controllers
             }
            
             order.OrderState = "IN_PROGRESS";
-          
-           
+
+            
             user.DelivererOrders.Add(order);
 
             _userRepository.UpdateUser(user);
+
+
 
             //_orderRepository.ChangeOrderState(orderStateDto.State, orderStateDto.Id);
             return Ok(order.DeliveryTime);
@@ -124,6 +130,23 @@ namespace FoodDeliveryAPI.Controllers
             return Ok(o);
 
         }
+
+        //private void ChangeOrderState(string id, int sleepTime)
+        //{
+        //    //Thread.Sleep(sleepTime);
+        //    //using(DeliveryContext _context)
+        //    //{
+        //    //    _context.Orders.Where(i => i.Id.ToString() == id).FirstOrDefault();
+        //    //    _context.SaveChanges();
+        //    //}
+        //    Order order = _orderRepository.GetById(Int32.Parse(id));
+        //    order.OrderState = "FINISHED";
+        //    _orderRepository.UpdateOrder(order);
+        //    //Order order = _orderRepository.GetById(Int32.Parse((string)id));
+
+        //    //_orderRepository.UpdateOrder(order);
+
+        //}
 
 
 

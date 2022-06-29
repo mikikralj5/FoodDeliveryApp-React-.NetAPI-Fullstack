@@ -55,6 +55,11 @@ namespace FoodDeliveryAPI.Repository
             _context.Orders.Update(order);
             _context.SaveChanges();
         }
+
+        //public List<Order> GetInProgressOrders()
+        //{
+        //    return _context.Orders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString()).ToList();
+        //}
     }
 }
 

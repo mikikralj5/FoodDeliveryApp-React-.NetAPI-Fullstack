@@ -104,7 +104,7 @@ namespace FoodDeliveryAPI.Controllers
 
             User user = _userRepository.GetByUsername(username);
 
-            return Ok(user.DelivererOrders);
+            return Ok(user.ConsumerOrders.Where(i => i.OrderState == OrderState.IN_PROGRESS.ToString()));
         }
 
         [HttpGet("GetOrderById/{id}")]

@@ -4,11 +4,11 @@ export default class ConsumerService {
       const resp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/Register`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
           },
           body: {
             body: JSON.stringify(body),
@@ -29,11 +29,11 @@ export default class ConsumerService {
       const respp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/Login`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify(body),
         }
@@ -50,11 +50,11 @@ export default class ConsumerService {
       const respp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/LoginWithFb`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify(body),
         }
@@ -71,11 +71,11 @@ export default class ConsumerService {
       const resp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UpdateUserProfile`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify(body),
         }
@@ -92,20 +92,20 @@ export default class ConsumerService {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetUserProfile`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
 
       const string = await response.text();
       console.log(string);
-      const json = string === '' ? {} : JSON.parse(string);
-      console.log('usao');
+      const json = string === "" ? {} : JSON.parse(string);
+      console.log("usao");
       if (json) {
         return json;
       } else {
@@ -121,12 +121,12 @@ export default class ConsumerService {
       const resp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/PlaceOrder`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify(body),
         }
@@ -145,12 +145,12 @@ export default class ConsumerService {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetProducts`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -166,12 +166,12 @@ export default class ConsumerService {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetImg`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -187,17 +187,17 @@ export default class ConsumerService {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetCompletedOrdersByUser`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
       const data = await response.json();
-      console.log('funkcija' + data);
+      console.log("funkcija" + data);
       return data;
     } catch (error) {
       console.log(error);
@@ -209,17 +209,39 @@ export default class ConsumerService {
       const response = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetOrderById/${id}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
       const data = await response.json();
-      console.log('id : ' + id);
+      console.log("id : " + id);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async GetCurrentOrders() {
+    try {
+      const response = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Consumer/GetOrdersInProgress`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const data = await response.json();
+      // console.log("funkcija" + data);
       return data;
     } catch (error) {
       console.log(error);
