@@ -64,9 +64,7 @@ export default function AddProduct() {
             id="modal-modal-title"
             variant="h6"
             component="h2"
-          >
-            Add Product
-          </Typography>
+          ></Typography>
           <TextField
             id="name"
             name="name"
@@ -86,25 +84,23 @@ export default function AddProduct() {
             onChange={(e) => setPrice(e.target.value)}
           />
           <TransferInput></TransferInput>
-          <Stack spacing={20} direction="row">
-            <Button
-              variant="outlined"
-              component="label"
-              color="primary"
-              sx={{ mt: 1, mb: 1, ml: 6 }}
-            >
-              {" "}
-              <Add /> Upload a picture
-              <input type="file" name="picture" hidden />
-            </Button>
-            <Button
-              sx={{ height: 40, mt: 1, marginLeft: 55 }}
-              variant="outlined"
-              onClick={() => handleClick()}
-            >
-              Add product
-            </Button>
-          </Stack>
+          <Box sx={{ width: "100%", marginTop: 5 }}>
+            <Stack spacing={18} direction="row">
+              <Button variant="outlined" component="label" color="primary">
+                <Add /> Upload a picture
+                <input type="file" name="picture" hidden />
+              </Button>
+
+              <Button
+                variant="outlined"
+                component="label"
+                color="primary"
+                onClick={() => handleClick()}
+              >
+                <Add /> Add product
+              </Button>
+            </Stack>
+          </Box>
         </Box>
       </Modal>
     </div>

@@ -16,6 +16,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../context/AuthProvider";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 
 export default function ProductItem({ id, price, name, ingredients }) {
   const { cart, setCart, addToCart } = useGlobalContext();
@@ -36,7 +38,9 @@ export default function ProductItem({ id, price, name, ingredients }) {
         height: 400,
       }}
     >
-      <CardHeader title={name} />
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <CardHeader align-content="center" title={name} />
+      </Box>
       <CardMedia
         component="img"
         height="194"
@@ -44,29 +48,42 @@ export default function ProductItem({ id, price, name, ingredients }) {
         alt="Paella dish"
       />
       <CardContent>
-        <Typography variant="body2" color="text.primary" sx={{ marginLeft: 0 }}>
-          {ingredients}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ marginLeft: 37, marginTop: 0 }}
-        >
-          {`$${price}`}
-        </Typography>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Typography
+            fontSize={20}
+            variant="body2"
+            color="text.primary"
+            sx={{ marginLeft: 0 }}
+          >
+            {ingredients}
+          </Typography>
+        </Box>
       </CardContent>
+
       <CardActions>
-        <IconButton
-          onClick={() => {
-            if (!cart.some((e) => e.id === id)) {
-              addToCart(id, price, name, ingredients);
-            }
-          }}
-          aria-label="add to cart"
-          sx={{ marginLeft: 37 }}
-        >
-          <AddIcon sx={{ fontSize: 40 }} />
-        </IconButton>
+        <Box sx={{ width: "100%" }}>
+          <Stack spacing={30} direction="row">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              fontSize={20}
+              marginTop={2}
+            >
+              {`$${price}`}
+            </Typography>
+
+            <IconButton
+              onClick={() => {
+                if (!cart.some((e) => e.id === id)) {
+                  addToCart(id, price, name, ingredients);
+                }
+              }}
+              aria-label="add to cart"
+            >
+              <AddIcon sx={{ color: "blue", fontSize: 50 }} />
+            </IconButton>
+          </Stack>
+        </Box>
       </CardActions>
     </Card>
   );

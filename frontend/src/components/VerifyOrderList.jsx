@@ -20,7 +20,7 @@ const VerifyOrderList = () => {
     const data = await DelivererService.GetPendingOrders();
     if (data) {
       setOrders(data);
-      console.log(orders);
+      console.log(data);
     } else {
       setOrders([]);
     }

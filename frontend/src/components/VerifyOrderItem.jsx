@@ -37,14 +37,19 @@ const VerifyOrderItem = ({
       <img src={"/6.png"} />
       <Stack direction="row" spacing={5}>
         <div>
-          <h4>Id : {id}</h4>
+          <h4>Customer : {username}</h4>
           <h4>Price : {totalPrice}</h4>
           <h4>Comment : {comment}</h4>
         </div>
 
         <div>
           <h4>Order address : {orderAddress}</h4>
-          <h4>Customer : {username}</h4>
+          <h4>
+            Products :{" "}
+            {products.map((item) => {
+              return item.product.name + ",";
+            })}
+          </h4>
         </div>
       </Stack>
       <div>

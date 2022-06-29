@@ -1,16 +1,16 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { useGlobalContext } from '../context/AuthProvider';
-import { CollectionsBookmarkRounded } from '@mui/icons-material';
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import List from "@mui/material/List";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Checkbox from "@mui/material/Checkbox";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { useGlobalContext } from "../context/AuthProvider";
+import { CollectionsBookmarkRounded } from "@mui/icons-material";
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -28,10 +28,11 @@ export default function TransferList() {
   const { chosenProducts, setChosenProducts } = useGlobalContext();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([
-    'kecap',
-    'pavlaka',
-    'majonez',
-    'kita',
+    "kecap",
+    "pavlaka",
+    "majonez",
+    "luk",
+    "senf",
   ]);
   const [right, setRight] = React.useState([]);
 
@@ -97,7 +98,7 @@ export default function TransferList() {
             }
             disabled={items.length === 0}
             inputProps={{
-              'aria-label': 'all items selected',
+              "aria-label": "all items selected",
             }}
           />
         }
@@ -109,8 +110,8 @@ export default function TransferList() {
         sx={{
           width: 200,
           height: 230,
-          bgcolor: 'background.paper',
-          overflow: 'auto',
+          bgcolor: "background.paper",
+          overflow: "auto",
         }}
         dense
         component="div"
@@ -132,7 +133,7 @@ export default function TransferList() {
                   tabIndex={-1}
                   disableRipple
                   inputProps={{
-                    'aria-labelledby': labelId,
+                    "aria-labelledby": labelId,
                   }}
                 />
               </ListItemIcon>
@@ -147,7 +148,7 @@ export default function TransferList() {
 
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>{customList('Choices', left)}</Grid>
+      <Grid item>{customList("Choices", left)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">
           <Button
@@ -172,7 +173,7 @@ export default function TransferList() {
           </Button>
         </Grid>
       </Grid>
-      <Grid item>{customList('Chosen', right)}</Grid>
+      <Grid item>{customList("Chosen", right)}</Grid>
     </Grid>
   );
 }

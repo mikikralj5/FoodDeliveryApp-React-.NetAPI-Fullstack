@@ -122,8 +122,12 @@ const ResponsiveAppBar = () => {
                   })}
                 </div>
               ) : (
-                <div>
-                  <MenuItem key="login" onClick={() => navigate("./login")}>
+                <Box>
+                  <MenuItem
+                    key="login"
+                    onClick={() => navigate("./login")}
+                    sx={{ alignContent: "" }}
+                  >
                     <Typography textAlign="center">Login</Typography>
                   </MenuItem>
                   <MenuItem
@@ -132,7 +136,7 @@ const ResponsiveAppBar = () => {
                   >
                     <Typography textAlign="center">Register</Typography>
                   </MenuItem>
-                </div>
+                </Box>
               )}
             </Menu>
           </Box>
@@ -200,38 +204,16 @@ const ResponsiveAppBar = () => {
             )}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          {localStorage.getItem("loggedIn") ? (
+            <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="/static/images/avatar/2.jpg"
                   src={localStorage.getItem("image")}
                 />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+            </Box>
+          ) : null}
         </Toolbar>
       </Container>
     </AppBar>

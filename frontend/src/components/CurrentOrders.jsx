@@ -39,7 +39,7 @@ const CurrentOrders = () => {
     return (
       <section className="cart">
         <header>
-          <h2>No order history</h2>
+          <h2>No current orders </h2>
         </header>
       </section>
     );
@@ -48,7 +48,7 @@ const CurrentOrders = () => {
   return (
     <section className="cart">
       <header>
-        <h2>Order history</h2>
+        <h2>Current orders</h2>
       </header>
 
       <div>

@@ -79,7 +79,7 @@ const UpdateUser = () => {
               alignItems: "center",
             }}
           >
-            <Avatar alt="Remy Sharp" src="/3.png" />
+            <Avatar alt="Remy Sharp" src={localStorage.getItem("image")} />
             <Typography component="h1" variant="h5">
               My profile
             </Typography>
@@ -129,23 +129,7 @@ const UpdateUser = () => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    InputLabelProps={{ shrink: true }}
-                    name="username"
-                    value={user.username}
-                    onChange={(e) =>
-                      setUser((user) => ({
-                        ...user,
-                        username: e.target.value,
-                      }))
-                    }
-                  />
-                </Grid>
+
                 <Grid item xs={12}>
                   <TextField
                     required

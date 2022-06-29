@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../context/AuthProvider";
 import ProductItem from "./ProductItem";
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
-import Typography from "@mui/material/Typography";
 import AddProduct from "./AddProduct";
 import Loading from "./Loading";
+import Button from "@mui/material/Button";
 
 import Stack from "@mui/material/Stack";
 import ConsumerService from "../APIService/ConsumerService";
@@ -44,20 +43,35 @@ export default function CocktailList() {
   }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        minWidth: 300,
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {products.map((item) => {
-        return <ProductItem key={item.id} {...item} />;
-      })}
-      <AddProduct setProducts={setProducts}></AddProduct>
+    <Box>
+      {localStorage.getItem("role") === "ADMIN" ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          marginTop={5}
+          marginBottom={5}
+        >
+          <Button variant="outlined">
+            <AddProduct setProducts={setProducts}></AddProduct>
+          </Button>
+        </Box>
+      ) : null}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          minWidth: 300,
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {products.map((item) => {
+          return <ProductItem key={item.id} {...item} />;
+        })}
+      </Box>
     </Box>
   );
 }
