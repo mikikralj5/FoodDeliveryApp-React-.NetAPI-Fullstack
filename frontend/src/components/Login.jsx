@@ -29,6 +29,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/dashboard";
   const [error, setError] = React.useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const [loggedIn, setLoggedIn] = React.useState(false);
 
   const responseFacebook = async (resp) => {
@@ -79,7 +80,7 @@ const Login = () => {
       } else if (respp.status === 404) {
         setError(true);
         console.log("bad username or password");
-        console.log(jsoned.message);
+        setErrMsg(jsoned);
       }
     } catch (err) {
       //console.log(err);
@@ -88,7 +89,7 @@ const Login = () => {
 
   return (
     <div>
-      {error && <Alert severity="error">Bad username or password !</Alert>}
+      {error && <Alert severity="error">{errMsg} !</Alert>}
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />

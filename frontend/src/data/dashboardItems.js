@@ -2,7 +2,7 @@ const dashboardItems = [
   {
     id: 1,
     title: "Edit profile",
-    redirectUrl: "./update",
+    redirectUrl: "/update",
     role: ["ADMIN", "CONSUMER", "DELIVERER"],
     url: "/20943830.jpg",
   },

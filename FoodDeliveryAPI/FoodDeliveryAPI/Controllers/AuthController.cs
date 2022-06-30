@@ -118,7 +118,12 @@ namespace FoodDeliveryAPI.Controllers
                 return NotFound("Wrong password");
             }
 
-            var token = _jwtService.GenerateToken(userTemp);
+           if(userTemp.Verified == UserState.PENDING.ToString() || userTemp.Verified == UserState.DECLINED.ToString())
+            {
+                return NotFound("Not verified");
+            }
+
+                var token = _jwtService.GenerateToken(userTemp);
 
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
