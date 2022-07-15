@@ -33,7 +33,7 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = React.useState(false);
 
   const responseFacebook = async (resp) => {
-    /* const respp = await ConsumerService.LogInUserFb({
+    const respp = await ConsumerService.LogInUserFb({
       name: resp.name,
       email: resp.email,
     });
@@ -41,9 +41,10 @@ const Login = () => {
     if (respp.ok) {
       localStorage.setItem("token", jsoned);
       localStorage.setItem("loggedIn", true);
+      localStorage.setItem("role", jsoned.role);
       localStorage.setItem("image", resp.picture.data.url);
       navigate("/update");
-      } */
+    }
   };
 
   const componentClicked = (data) => {

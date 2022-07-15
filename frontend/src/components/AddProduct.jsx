@@ -7,7 +7,7 @@ import TransferInput from "./TransferInput";
 import Add from "@mui/icons-material/Add";
 import Stack from "@mui/material/Stack";
 import { useGlobalContext } from "../context/AuthProvider";
-
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import { ReplayOutlined } from "@mui/icons-material";
 import AdminService from "../APIService/AdminService";
@@ -23,30 +23,45 @@ const style = {
   p: 4,
 };
 
-export default function AddProduct() {
+export default function AddProduct({ fetchProducts }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
+    fetchProducts();
     setOpen(false);
-    window.location.reload();
+    //window.location.reload();
   };
   const { chosenProducts, setChosenProducts } = useGlobalContext();
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
+  const [error, setError] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState("");
 
   const handleClick = async () => {
     const ingredients = chosenProducts.toString();
-    console.log(ingredients);
-    console.log(name);
-    console.log(price);
 
-    const jsoned = await AdminService.AddProduct({
-      Name: name,
-      Price: price,
-      Ingredients: ingredients,
-    });
+    if (name === "" || price === "" || ingredients === "") {
+      setError(true);
+      setErrMsg("Populate all the fields");
+    } else if (isNaN(price)) {
+      setError(true);
+      setErrMsg("Enter the number");
+    } else {
+      const resp = await AdminService.AddProduct({
+        Name: name,
+        Price: price,
+        Ingredients: ingredients,
+      });
 
-    handleClose();
+      const jsoned = await resp.json();
+      console.log(jsoned);
+      if (resp.ok) {
+        handleClose();
+      } else {
+        setError(true);
+        setErrMsg(jsoned);
+      }
+    }
   };
 
   return (
@@ -59,6 +74,7 @@ export default function AddProduct() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {error && <Alert severity="error">{errMsg} !</Alert>}
           <Typography
             sx={{ marginLeft: 29 }}
             id="modal-modal-title"
@@ -95,7 +111,7 @@ export default function AddProduct() {
                 variant="outlined"
                 component="label"
                 color="primary"
-                onClick={() => handleClick()}
+                onClick={handleClick}
               >
                 <Add /> Add product
               </Button>

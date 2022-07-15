@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Button from "@mui/material/Button";
+import { Verified } from "@mui/icons-material";
 
 const OrderItem = ({
   id,
@@ -30,7 +31,9 @@ const OrderItem = ({
           ) : (
             <h4>Customer : {username}</h4>
           )}
-
+          {localStorage.getItem("role") === "ADMIN" ? (
+            <h4>State : {orderState}</h4>
+          ) : null}
           <h4>Price : {totalPrice}</h4>
           <h4>Comment : {comment}</h4>
         </div>
@@ -45,14 +48,16 @@ const OrderItem = ({
           </h4>
         </div>
       </Stack>
-      <div>
-        <Button
-          onClick={() => navigate("/myorder", { state: { id: id } })}
-          variant="text"
-        >
-          <ArrowForwardIosIcon></ArrowForwardIosIcon>
-        </Button>
-      </div>
+      {localStorage.getItem("role") === "CONSUMER" ? (
+        <div>
+          <Button
+            onClick={() => navigate("/myorder", { state: { id: id } })}
+            variant="text"
+          >
+            <ArrowForwardIosIcon></ArrowForwardIosIcon>
+          </Button>
+        </div>
+      ) : null}
     </article>
   );
 };

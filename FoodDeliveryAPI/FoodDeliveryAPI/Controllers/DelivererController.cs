@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FoodDeliveryAPI.DTOs.Order;
 using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,12 +30,14 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpGet("GetPendingOrders")]
+        [Authorize(Roles = "DELIVERER")]
         public IActionResult GetPendingOrders()
         {
             return Ok(_orderRepository.GetPendingOrders());
         }
 
         [HttpPost("AcceptOrder/{id}")]
+        [Authorize(Roles = "DELIVERER")]
         public IActionResult AcceptOrder(string id)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -71,7 +74,9 @@ namespace FoodDeliveryAPI.Controllers
             {
                 order.DeliveryTime = dtArr[0] + ":" + dtMinNum;
             }
-           
+
+
+
             order.OrderState = "IN_PROGRESS";
 
             
@@ -86,6 +91,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpPost("FinishOrder/{id}")]
+        [Authorize(Roles = "DELIVERER, CONSUMER")]
         public IActionResult FinishOrder(string id)
         {
             Order order = _orderRepository.GetById(Int32.Parse(id));
@@ -95,6 +101,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpGet("GetFinishedOrders")]
+        [Authorize(Roles = "DELIVERER")]
         public IActionResult GetFinishedOrders()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -104,11 +111,26 @@ namespace FoodDeliveryAPI.Controllers
 
             User user = _userRepository.GetByUsername(username);
 
+            foreach (var item in user.DelivererOrders) {
+
+                string userInput = item.DeliveryTime;
+                var time = TimeSpan.Parse(userInput);
+                var dateTime = DateTime.Today.Add(time);
+
+                if(DateTime.Now > dateTime && item.OrderState != OrderState.FINISHED.ToString())
+                {
+                    item.OrderState = OrderState.FINISHED.ToString();
+                }
+            }
+
+            _userRepository.UpdateUser(user);
+
             return Ok(user.DelivererOrders.Where(i => i.OrderState == OrderState.FINISHED.ToString()));
 
         }
 
         [HttpGet("GetOrderById/{id}")]
+        [Authorize(Roles = "DELIVERER")]
         public IActionResult GetOrderById(string id)
         {
             return Ok(_orderRepository.GetById(Int32.Parse(id)));
@@ -116,6 +138,7 @@ namespace FoodDeliveryAPI.Controllers
 
 
         [HttpGet("GetInProgressOrder")]
+        [Authorize(Roles = "DELIVERER")]
         public IActionResult GetInProgressOrder()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;

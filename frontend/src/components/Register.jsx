@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-
+import Alert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -30,6 +30,8 @@ const theme = createTheme();
 const Register = () => {
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
+  const [error, setError] = React.useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const fileSelectedHandler = (event) => {
     setFile(event.target.files[0]);
@@ -44,11 +46,23 @@ const Register = () => {
     imgData.append("UserImage", file);
     imgData.append("Username", data.get("username"));
 
-    // const data = await response.blob();
-    // const imgUrlTemp = URL.createObjectURL(data);
-    // setImgUrl(imgUrlTemp);
-
-    try {
+    if (
+      data.get("username") === "" ||
+      data.get("password") === "" ||
+      data.get("email") === "" ||
+      data.get("firstName") === "" ||
+      data.get("lastName") === "" ||
+      data.get("address") === "" ||
+      data.get("role") === "" ||
+      data.get("date") === "" ||
+      file == null
+    ) {
+      setError(true);
+      setErrMsg("Populate all the fields");
+    } else if (data.get("password") !== data.get("confirmPassword")) {
+      setError(true);
+      setErrMsg("Passwords don't match");
+    } else {
       const resp = await fetch(
         `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/Register`,
         {
@@ -62,38 +76,46 @@ const Register = () => {
             username: data.get("username"),
             password: data.get("password"),
             email: data.get("email"),
-            firstName: data.get("fristName"),
+            firstName: data.get("firstName"),
             lastName: data.get("lastName"),
             address: data.get("address"),
             role: data.get("role"),
+            date: data.get("date"),
             //ProfileImage: data.get("picture"),
           }),
         }
       );
 
-      //const dataa = await resp.json();
-    } catch (err) {
-      console.log(err);
+      const jsoned = await resp.json();
+
+      if (resp.ok) {
+        const resp = await fetch(
+          `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UploadImage`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              //"Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: imgData,
+          }
+        );
+        navigate("../login");
+      } else {
+        setErrMsg(jsoned);
+        setError(true);
+      }
     }
 
-    const resp = await fetch(
-      `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/UploadImage`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          //"Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: imgData,
-      }
-    );
-
-    navigate("../login");
+    // const data = await response.blob();
+    // const imgUrlTemp = URL.createObjectURL(data);
+    // setImgUrl(imgUrlTemp);
   };
 
   return (
     <div>
+      {error && <Alert severity="error">{errMsg} !</Alert>}
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -205,6 +227,11 @@ const Register = () => {
                     label="Address"
                     name="address"
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <input type="date" name="date" />
+                  </FormControl>
                 </Grid>
               </Grid>
               <Button

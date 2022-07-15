@@ -21,6 +21,7 @@ import RequireAuth from "./context/RequireAuth";
 import Unathorized from "./components/Unauthorized";
 import ConsumerOrders from "./components/ConsumerOrders";
 import CurrentOrders from "./components/CurrentOrders";
+import AdminUserOverview from "./components/AdminUserOverview";
 
 function App() {
   const [test, setTest] = useState([]);
@@ -34,9 +35,13 @@ function App() {
 
           <Route path="/login" element={<Login />} />
 
-          <Route element={<RequireAuth allowedRoles={["CONSUMER"]} />}>
+          <Route
+            element={
+              <RequireAuth allowedRoles={["CONSUMER", "DELIVERER", "ADMIN"]} />
+            }
+          >
             <Route path="/cart" element={<CartContainer />} />
-            <Route path="/consumerorders" element={<ConsumerOrders />} />
+            <Route path="/pastorders" element={<ConsumerOrders />} />
             <Route path="/currentorders" element={<CurrentOrders />} />
           </Route>
 
@@ -47,7 +52,7 @@ function App() {
           </Route>
           <Route element={<RequireAuth allowedRoles={["ADMIN"]} />}>
             <Route path="/users" element={<Users />} />
-
+            <Route path="/verifiedUsers" element={<AdminUserOverview />} />
             <Route path="/userItem" element={<UserItem />} />
             <Route path="/addProduct" element={<AddProduct />} />
           </Route>

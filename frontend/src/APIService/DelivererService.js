@@ -82,4 +82,25 @@ export default class DelivererService {
       console.log(error);
     }
   }
+
+  static async GetFinishedOrders() {
+    try {
+      const response = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Deliverer/GetFinishedOrders`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

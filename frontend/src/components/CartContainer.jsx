@@ -6,49 +6,51 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ConsumerService from "../APIService/ConsumerService.js";
+import Alert from "@mui/material/Alert";
 const CartContainer = () => {
   const { cart, setCart, total, clearCart } = useGlobalContext();
   const [comment, setComment] = React.useState("");
   const [address, setAddress] = React.useState("");
-  const navigate = useNavigate();
-  /*if (cartItems.length === 0) {
-    return (
-      <section className="cart">
-        {/* cart header }
-        <header>
-          <h2>your bag</h2>
-          <h4 className="empty-cart">is currently empty</h4>
-        </header>
-      </section>
-    );
-  }
-  */
-  const confirmOrder = async () => {
-    //   const ids = cart.map((item) => {
-    //    return item.idl;
-    //    });
-    //    console.log(ids);
-    const proba = JSON.stringify({
-      products: cart,
-      orderAddress: address,
-      comment: comment,
-      totalPrice: total + 5,
-    });
-    console.log(proba);
+  const [error, setError] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState("");
 
-    const dataa = await ConsumerService.PostOrder({
-      // name: "aa",
-      products: cart,
-      orderAddress: address,
-      comment: comment,
-      totalPrice: total + 5,
-    });
-    clearCart();
-    navigate("../dashboard");
+  const navigate = useNavigate();
+  // if (cartItems.length === 0) {
+  //   return (
+  //     <section className="cart">
+  //       {cart header }
+  //       <header>
+  //         <h2>your bag</h2>
+  //         <h4 className="empty-cart">is currently empty</h4>
+  //       </header>
+  //     </section>
+  //   );
+  // }
+
+  const confirmOrder = async () => {
+    if (cart.length < 1) {
+      setError(true);
+      setErrMsg("Your cart is empty!");
+      console.log("empty");
+    } else if (address === "" || comment === "") {
+      setError(true);
+      setErrMsg("Populate all the fields");
+    } else {
+      const dataa = await ConsumerService.PostOrder({
+        // name: "aa",
+        products: cart,
+        orderAddress: address,
+        comment: comment,
+        totalPrice: total + 5,
+      });
+      clearCart();
+      navigate("../dashboard");
+    }
   };
 
   return (
     <section className="cart">
+      {error && <Alert severity="error">{errMsg} !</Alert>}
       {/* cart header */}
       <header>
         <h2>your bag</h2>

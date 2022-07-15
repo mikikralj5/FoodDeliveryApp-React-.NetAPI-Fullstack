@@ -1,11 +1,22 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { useGlobalContext } from "../context/AuthProvider";
 import DoneIcon from "@mui/icons-material/Done";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 import AdminService from "../APIService/AdminService";
 import emailjs from "@emailjs/browser";
+import ConsumerService from "../APIService/ConsumerService";
 
 const UserItem = ({ username, setUsers, users, email }) => {
+  const [img, setImg] = useState();
+
+  const fetchImg = async (username) => {
+    const userImgBlob = await ConsumerService.GetUserImageByUsername(username);
+    setImg(URL.createObjectURL(userImgBlob));
+  };
+
+  useEffect(() => {
+    fetchImg(username);
+  }, []);
   const handleClick = async (action) => {
     console.log(action);
     const respp = await AdminService.PostUser({
@@ -44,7 +55,7 @@ const UserItem = ({ username, setUsers, users, email }) => {
 
   return (
     <article className="cart-item">
-      <img src={"/6.png"} />
+      <img src={img} />
       <div>
         <h4>{username}</h4>
       </div>
@@ -57,12 +68,14 @@ const UserItem = ({ username, setUsers, users, email }) => {
         </button> */}
         <form onSubmit={handleSubmit}>
           <input type="hidden" value={email} name="toEmail" />
+          <input type="hidden" value="CONFIRMED" name="state" />
           <button type="submit" onClick={() => handleClick("CONFIRMED")}>
             <DoneIcon></DoneIcon>
           </button>
         </form>
         <form onSubmit={handleSubmit}>
           <input type="hidden" value={email} name="toEmail" />
+          <input type="hidden" value="DECLINED" name="state" />
           <button type="submit" onClick={() => handleClick("DECLINED")}>
             <DoNotDisturbIcon></DoNotDisturbIcon>
           </button>

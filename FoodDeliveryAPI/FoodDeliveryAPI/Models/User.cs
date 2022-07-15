@@ -27,13 +27,21 @@ namespace FoodDeliveryAPI.Models
 
         [Key]
         public string Username { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Password { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Email { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Firstname { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Lastname { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Address { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Date { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public string Role { get; set; }
+       
         public string Picture { get; set; }
         private List<Order> consumerOrders;
         private List<Order> delivererOrders;

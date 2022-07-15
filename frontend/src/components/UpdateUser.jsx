@@ -38,6 +38,7 @@ const UpdateUser = () => {
       email: json.email,
       address: json.address,
       username: json.username,
+      password: json.password,
     }));
     console.log(user);
   };
@@ -55,6 +56,7 @@ const UpdateUser = () => {
       email: user.email,
       address: user.address,
       username: user.username,
+      password: user.password,
     });
 
     console.log({
@@ -204,7 +206,7 @@ const UpdateUser = () => {
                   />
                 </Grid>
               </Grid>
-              <Button
+              {/* <Button
                 fullWidth
                 variant="outlined"
                 component="label"
@@ -214,7 +216,7 @@ const UpdateUser = () => {
                 {" "}
                 <Add /> Upload a picture
                 <input type="file" name="picture" hidden />
-              </Button>
+              </Button> */}
               <Button
                 type="submit"
                 fullWidth

@@ -1,14 +1,16 @@
-import React from 'react';
-import CartItem from './CartItem.jsx';
-import { useGlobalContext } from '../context/AuthProvider';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { useEffect, useState } from 'react';
-import Loading from './Loading';
-import UserItem from './UserItem';
-import ConsumerService from '../APIService/ConsumerService.js';
-import OrderItem from './OrderItem.jsx';
+import React from "react";
+import CartItem from "./CartItem.jsx";
+import { useGlobalContext } from "../context/AuthProvider";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import { useEffect, useState } from "react";
+import Loading from "./Loading";
+import UserItem from "./UserItem";
+import ConsumerService from "../APIService/ConsumerService.js";
+import OrderItem from "./OrderItem.jsx";
+import DelivererService from "../APIService/DelivererService.js";
+import AdminService from "../APIService/AdminService.js";
 
 const ConsumerOrders = () => {
   const { loading, setLoading } = useGlobalContext();
@@ -17,15 +19,24 @@ const ConsumerOrders = () => {
 
   const fetchOrders = async () => {
     setLoading(true);
-    const data = await ConsumerService.GetOrders();
-
-    if (data) {
-      console.log(' data postoji' + data);
+    if (localStorage.getItem("role") === "DELIVERER") {
+      const data = await DelivererService.GetFinishedOrders();
       setOrders(data);
-      console.log(orders);
+    } else if (localStorage.getItem("role") === "ADMIN") {
+      const data = await AdminService.GetAllOrders();
+      setOrders(data);
     } else {
-      // setOrders([]);
+      const data = await ConsumerService.GetOrders();
+      setOrders(data);
     }
+
+    // if (data) {
+    //   console.log(" data postoji" + data);
+    //   setOrders(data);
+    //   console.log(orders);
+    // } else {
+    //   // setOrders([]);
+    // }
     setLoading(false);
   };
   useEffect(() => {
@@ -48,7 +59,11 @@ const ConsumerOrders = () => {
   return (
     <section className="cart">
       <header>
-        <h2>Order history</h2>
+        {localStorage.getItem("role") === "ADMIN" ? (
+          <h2>All orders</h2>
+        ) : (
+          <h2>Order history</h2>
+        )}
       </header>
 
       <div>

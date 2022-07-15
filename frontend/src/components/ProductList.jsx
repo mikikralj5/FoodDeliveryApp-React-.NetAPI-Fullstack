@@ -15,11 +15,9 @@ export default function CocktailList() {
   const fetchProducts = async () => {
     setLoading(true);
     const data = await ConsumerService.GetProducts();
-    console.log(data);
 
     if (data) {
       setProducts(data);
-      console.log(products);
     } else {
       setProducts([]);
     }
@@ -37,7 +35,7 @@ export default function CocktailList() {
     return (
       <div>
         <h2 className="section-title">No products to display</h2>
-        <AddProduct setProducts={setProducts}></AddProduct>
+        <AddProduct fetchProducts={fetchProducts}></AddProduct>
       </div>
     );
   }
@@ -53,7 +51,7 @@ export default function CocktailList() {
           marginBottom={5}
         >
           <Button variant="outlined">
-            <AddProduct setProducts={setProducts}></AddProduct>
+            <AddProduct fetchProducts={fetchProducts}></AddProduct>
           </Button>
         </Box>
       ) : null}

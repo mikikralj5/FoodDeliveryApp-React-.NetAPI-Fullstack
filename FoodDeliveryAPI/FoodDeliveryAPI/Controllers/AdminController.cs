@@ -11,6 +11,7 @@ using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDeliveryAPI.Controllers
 {
@@ -36,6 +37,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpPost("VerifyUser")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult VerifyUser([FromBody] VerifyUserDto verifyUserDto)
         {
             _userRepository.VerifyUser(verifyUserDto.Username, verifyUserDto.State);
@@ -44,12 +46,14 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpGet("GetUnverifiedDeliverers")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult GetUnverifiedDeliverers()
         {
             return Ok(_mapper.Map<List<UserProfileDto>>(_userRepository.GetUnverifiedDeliverers()));
         }
 
         [HttpGet("GetVerifiedOrDeclinedDeliverers")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult GetVerifiedOrDeclinedDeliverers()
         {
             return Ok(_mapper.Map<List<UserProfileDto>>(_userRepository.GetVerifiedDeliverers()));
@@ -57,17 +61,27 @@ namespace FoodDeliveryAPI.Controllers
 
 
         [HttpPost("AddProduct")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult AddProduct([FromBody] ProductDto productDto)
         {
             Product product = _mapper.Map<Product>(productDto);
 
-            _productRepository.AddProduct(product);
+            try
+            {
+                _productRepository.AddProduct(product);
+            }
+            catch
+            {
+                return BadRequest("Failed to add a product, populate all the fields corectly");
+            }
+           
 
           
             return Ok("proizvod dodat");
         }
 
         [HttpPost("DeleteProduct/{id}")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult DeleteProduct(string id)
         {
            
@@ -78,11 +92,12 @@ namespace FoodDeliveryAPI.Controllers
         }
 
 
-       [HttpGet("GetAllOrders")]
-       public IActionResult GetAllOrders()
-       {
+        [HttpGet("GetAllOrders")]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GetAllOrders()
+        {
             return Ok(_orderRepository.GetFinishedAndInProgress());
-       }
+        }
 
 
 

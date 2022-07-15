@@ -8,6 +8,7 @@ using AutoMapper;
 using FoodDeliveryAPI.DTOs.Order;
 using FoodDeliveryAPI.Models;
 using FoodDeliveryAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpGet("GetProducts")]
+        [Authorize(Roles = "CONSUMER, ADMIN")]
         public IActionResult GetProducts()
         {
             return Ok(_productRepository.GetProducts());
@@ -45,6 +47,7 @@ namespace FoodDeliveryAPI.Controllers
 
       
         [HttpPost("PlaceOrder")]
+        [Authorize(Roles = "CONSUMER")]
         public IActionResult PlaceOrder([FromBody] NewOrderDto newOrderDto)
         {
 
@@ -84,6 +87,7 @@ namespace FoodDeliveryAPI.Controllers
 
 
         [HttpGet("GetCompletedOrdersByUser")]
+        [Authorize(Roles = "CONSUMER")]
         public IActionResult GetCompletedOrdersByUser()
         {
 
@@ -91,11 +95,28 @@ namespace FoodDeliveryAPI.Controllers
             var userClaims = identity.Claims;
             string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
 
+            User user = _userRepository.GetByUsername(username);
+
+            foreach (var item in user.ConsumerOrders)
+            {
+
+                string userInput = item.DeliveryTime;
+                var time = TimeSpan.Parse(userInput);
+                var dateTime = DateTime.Today.Add(time);
+
+                if (DateTime.Now > dateTime && item.OrderState != OrderState.FINISHED.ToString())
+                {
+                    item.OrderState = OrderState.FINISHED.ToString();
+                }
+            }
+
+            _userRepository.UpdateUser(user);
 
             return Ok(_orderRepository.GetCompletedOrdersByUser(username));
         }
 
         [HttpGet("GetOrdersInProgress")]
+        [Authorize(Roles = "CONSUMER")]
         public IActionResult GetOrersInProgress()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -108,6 +129,7 @@ namespace FoodDeliveryAPI.Controllers
         }
 
         [HttpGet("GetOrderById/{id}")]
+        [Authorize(Roles = "CONSUMER")]
         public IActionResult GetOrderById(string id)
         {                
             return Ok(_orderRepository.GetById(Int32.Parse(id)));

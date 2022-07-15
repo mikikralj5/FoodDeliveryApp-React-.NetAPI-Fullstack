@@ -182,6 +182,27 @@ export default class ConsumerService {
     }
   }
 
+  static async GetUserImageByUsername(username) {
+    try {
+      const response = await fetch(
+        `https://localhost:${process.env.REACT_APP_PORT}/api/Auth/GetImgByUsername/${username}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const data = await response.blob();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async GetOrders() {
     try {
       const response = await fetch(

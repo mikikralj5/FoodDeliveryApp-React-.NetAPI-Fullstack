@@ -50,7 +50,7 @@ namespace FoodDeliveryAPI.Controllers
             if (_userRepository.UserExists(dtoUser.Username))
             {
 
-                return BadRequest(new { mess = "vec postoji" });
+                return BadRequest("User already exists");
             }
 
             
@@ -70,8 +70,16 @@ namespace FoodDeliveryAPI.Controllers
             newUser.DelivererOrders = new List<Order>();
             newUser.ConsumerOrders = new List<Order>();
 
-             _userRepository.AddUser(newUser);
+            try
+            {
+                _userRepository.AddUser(newUser);
 
+            }
+            catch
+            {
+                return BadRequest("Registration failed");
+            }
+            //_userRepository.AddUser(newUser);
             return Ok("napravljen");
 
         }
@@ -81,10 +89,16 @@ namespace FoodDeliveryAPI.Controllers
         public IActionResult LoginWithFb(FbLoginDto fbLoginDto)
         {
             User u = new User();
-            u.Username = fbLoginDto.Name;
+            u.Username = fbLoginDto.Name.Split(' ')[0];
             u.Email = fbLoginDto.Email;
             u.Role = UserType.CONSUMER.ToString();
             u.Verified = UserState.CONFIRMED.ToString();
+            u.Date = " ";
+            u.Password = " ";
+            u.Firstname = fbLoginDto.Name.Split(' ')[0];
+            u.Lastname = fbLoginDto.Name.Split(' ')[1];
+            u.Address = " ";
+            u.Picture = "download.jpeg";
             u.DelivererOrders = new List<Order>();
             u.ConsumerOrders = new List<Order>();
 
@@ -97,7 +111,7 @@ namespace FoodDeliveryAPI.Controllers
                 HttpOnly = true
             });
 
-            return Ok(token); 
+            return Ok(new { token = token, role = u.Role });
         }
 
 
@@ -130,7 +144,7 @@ namespace FoodDeliveryAPI.Controllers
                 HttpOnly = true
             });
              
-            return Ok(new {token=token , role=userTemp.Role}); ;
+            return Ok(new {token=token , role=userTemp.Role}); 
         }
 
 
@@ -181,6 +195,27 @@ namespace FoodDeliveryAPI.Controllers
             return File(image, "image/jpeg");
     }
 
+
+        [HttpGet]
+        [Route("GetImgByUsername/{id}")]
+        public IActionResult GetImgByUsername(string id)
+        {
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //var userClaims = identity.Claims;
+            //string username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            User user = _userRepository.GetByUsername(id);
+
+            string folderName = "Images";
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            string path = Path.Combine(folderPath, user.Picture);
+
+
+            var image = System.IO.File.OpenRead(path);
+            return File(image, "image/jpeg");
+        }
+
+
         [HttpGet("GetUserProfile")]
         //[Authorize(Roles = "DELIVERER")]
         public IActionResult GetUserProfile()
@@ -199,7 +234,13 @@ namespace FoodDeliveryAPI.Controllers
         public IActionResult UpdateUserProfile([FromBody] UserProfileDto userProfileDto)
         {
 
-            User user = _mapper.Map<User>(userProfileDto);
+            //User user = _mapper.Map<User>(userProfileDto);
+            User user = _userRepository.GetByUsername(userProfileDto.Username);
+            user.Firstname = userProfileDto.Firstname;
+            user.Lastname = userProfileDto.Lastname;
+            user.Address = userProfileDto.Address;
+            user.Email = userProfileDto.Email;
+            user.Password = userProfileDto.Password;
             _userRepository.UpdateUser(user);
     
             return Ok("updated");

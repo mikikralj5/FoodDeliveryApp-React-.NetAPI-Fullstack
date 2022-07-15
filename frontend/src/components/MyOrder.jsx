@@ -53,13 +53,16 @@ const MyOrder = () => {
   const fetchConsumerOrder = async () => {
     setLoading(true);
     const data = await ConsumerService.GetConsumerOrder(id);
-
+    calculateTime(data.deliveryTime);
+    if (data.orderState === "FINISHED") {
+      setDelivered(true);
+    }
     if (data) {
       setOrder((order) => ({
         ...order,
         ...data,
       }));
-      calculateTime(data.deliveryTime);
+
       setLoading(false);
     }
   };
@@ -73,7 +76,13 @@ const MyOrder = () => {
 
     let currentTime = new Date().getTime();
 
-    setSeconds((deliveryFinishedTime - currentTime) / 1000);
+    if (deliveryFinishedTime < currentTime) {
+      setSeconds(-1);
+      console.log(deliveryFinishedTime < currentTime);
+      console.log("usaoooo");
+    } else {
+      setSeconds((deliveryFinishedTime - currentTime) / 1000);
+    }
   };
 
   useEffect(() => {
